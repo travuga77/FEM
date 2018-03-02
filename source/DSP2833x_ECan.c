@@ -167,7 +167,7 @@ void InitECanb(void)		// Initialize eCAN-B module
  false data. This is especially true while writing to/reading from a bit
  (or group of bits) among bits 16 - 31 */
 
-struct ECAN_REGS ECanbShadow;
+    struct ECAN_REGS ECanbShadow;
 
    EALLOW;		// EALLOW enables access to protected bits
 
@@ -286,7 +286,105 @@ struct ECAN_REGS ECanbShadow;
  	ECanbRegs.CANME.all = 0;		// Required before writing the MSGIDs
 
     EDIS;
+
+/* Write to the MSGID field  */
+
+    ECanbMboxes.MBOX10.MSGID.all = 0; // Standart Identifier
+    ECanbMboxes.MBOX15.MSGID.all = 0; // Standart Identifier
+    ECanbMboxes.MBOX16.MSGID.all = 0; // Standart Identifier
+    ECanbMboxes.MBOX24.MSGID.all = 0; // Standart Identifier
+    ECanbMboxes.MBOX25.MSGID.all = 0; // Standart Identifier
+    ECanbMboxes.MBOX26.MSGID.all = 0; // Standart Identifier
+    ECanbMboxes.MBOX27.MSGID.all = 0; // Standart Identifier
+    ECanbMboxes.MBOX28.MSGID.all = 0; // Standart Identifier
+    ECanbMboxes.MBOX29.MSGID.all = 0; // Standart Identifier
+    ECanbMboxes.MBOX30.MSGID.all = 0; // Standart Identifier
+    ECanbMboxes.MBOX31.MSGID.all = 0; // Standart Identifier
+
+    ECanbMboxes.MBOX10.MSGID.bit.STDMSGID = 0x136; // Standart Identifier
+    ECanbMboxes.MBOX24.MSGID.bit.STDMSGID = 0x400; // Standart Identifier
+    ECanbMboxes.MBOX25.MSGID.bit.STDMSGID = 0x220; // Standart Identifier
+    ECanbMboxes.MBOX26.MSGID.bit.STDMSGID = 0x221; // Standart Identifier
+    ECanbMboxes.MBOX27.MSGID.bit.STDMSGID = 0x120; // Standart Identifier
+
+    ECanbMboxes.MBOX28.MSGID.bit.AME=1;
+    ECanbLAMRegs.LAM28.all=0x80000000;
+    ECanbLAMRegs.LAM29.all=0x80000000;
+    ECanbLAMRegs.LAM30.all=0x80000000;
+    ECanbLAMRegs.LAM31.all=0x80000000;
+    ECanbMboxes.MBOX15.MSGID.bit.STDMSGID = 0x1A0; // Standart Identifier
+    ECanbMboxes.MBOX16.MSGID.bit.STDMSGID = 0x1A1; // Standart Identifier
+    ECanbMboxes.MBOX28.MSGID.bit.STDMSGID = 0x3A0; // Standart Identifier
+    ECanbMboxes.MBOX29.MSGID.bit.STDMSGID = 0x1A0; // Standart Identifier
+    ECanbMboxes.MBOX30.MSGID.bit.STDMSGID = 0x150; // Standart Identifier
+    ECanbMboxes.MBOX31.MSGID.bit.STDMSGID = 0x151; // Standart Identifier
+
+/* Configure Mailbox under test as a Transmit mailbox */
+
+    ECanbShadow.CANMD.all = ECanbRegs.CANMD.all;
+    ECanbShadow.CANMD.bit.MD10 = 0;
+    ECanbShadow.CANMD.bit.MD24 = 0;
+    ECanbShadow.CANMD.bit.MD25 = 0;
+    ECanbShadow.CANMD.bit.MD26 = 0;
+    ECanbShadow.CANMD.bit.MD27 = 0;
+    ECanbShadow.CANMD.bit.MD15 = 1;
+    ECanbShadow.CANMD.bit.MD16 = 1;
+    ECanbShadow.CANMD.bit.MD28 = 1;
+    ECanbShadow.CANMD.bit.MD29 = 1;
+    ECanbShadow.CANMD.bit.MD30 = 1;
+    ECanbShadow.CANMD.bit.MD31 = 1;
+    ECanbRegs.CANMD.all = ECanbShadow.CANMD.all;
+
+/* Enable Mailbox under test */
+
+    ECanbShadow.CANME.all = ECanbRegs.CANME.all;
+    ECanbShadow.CANME.bit.ME10 = 1;
+    ECanbShadow.CANME.bit.ME24 = 1;
+    ECanbShadow.CANME.bit.ME25 = 1;
+    ECanbShadow.CANME.bit.ME26 = 1;
+    ECanbShadow.CANME.bit.ME27 = 1;
+    ECanbShadow.CANME.bit.ME15 = 1;
+    ECanbShadow.CANME.bit.ME16 = 1;
+    ECanbShadow.CANME.bit.ME28 = 1;
+    ECanbShadow.CANME.bit.ME29 = 1;
+    ECanbShadow.CANME.bit.ME30 = 1;
+    ECanbShadow.CANME.bit.ME31 = 1;
+    ECanbRegs.CANME.all = ECanbShadow.CANME.all;
+
+    EALLOW;
+    ECanbShadow.CANMIM.all = ECanbRegs.CANMIM.all;
+    ECanbShadow.CANMIM.bit.MIM30=1;
+    ECanbRegs.CANMIM.all = ECanbShadow.CANMIM.all;
+
+    ECanbShadow.CANGIM.all = ECanbRegs.CANGIM.all;
+    ECanbShadow.CANGIM.bit.I0EN=1;
+    ECanbRegs.CANGIM.all = ECanbShadow.CANGIM.all;
+    EDIS;
+
+/* Write to DLC field in Master Control reg */
+
+    ECanbMboxes.MBOX10.MSGCTRL.bit.DLC = 8;
+    ECanbMboxes.MBOX24.MSGCTRL.bit.DLC = 1;
+    ECanbMboxes.MBOX25.MSGCTRL.bit.DLC = 2;
+    ECanbMboxes.MBOX26.MSGCTRL.bit.DLC = 2;
+    ECanbMboxes.MBOX27.MSGCTRL.bit.DLC = 4;
+    ECanbMboxes.MBOX15.MSGCTRL.bit.DLC = 6;
+    ECanbMboxes.MBOX16.MSGCTRL.bit.DLC = 6;
+    ECanbMboxes.MBOX28.MSGCTRL.bit.DLC = 6;
+    ECanbMboxes.MBOX29.MSGCTRL.bit.DLC = 6;
+    ECanbMboxes.MBOX30.MSGCTRL.bit.DLC = 2;
+    ECanbMboxes.MBOX31.MSGCTRL.bit.DLC = 2;
+
+/* Write to the mailbox RAM field */
+
+    ECanbMboxes.MBOX10.MDL.all = 0x0;
+    ECanbMboxes.MBOX24.MDL.all = 0x0;
+    ECanbMboxes.MBOX25.MDL.all = 0x0;
+    ECanbMboxes.MBOX26.MDL.all = 0x0;
+    ECanbMboxes.MBOX27.MDL.all = 0x0;
+
 }
+
 #endif // if DSP28_ECANB
 
 
@@ -394,7 +492,10 @@ void InitECanbGpio(void)
 
     EDIS;
 }
+
 #endif // if DSP28_ECANB
+
+
 
 /*
 Note: Bit timing parameters must be chosen based on the network parameters such

@@ -56,6 +56,13 @@ void InitPieCtrl(void)
 	PieCtrlRegs.PIEIFR12.all = 0;
 
 
+// Enable Xint3 in the PIE: Group 12 interrupt 1
+    PieCtrlRegs.PIECTRL.bit.ENPIE = 1;   // Enable the PIE block
+    PieCtrlRegs.PIEIER9.bit.INTx7 = 1;  // Enable PIE Group 9 INTx7
+
+    IER |= M_INT12; // Enable CPU int12
+    IER |= M_INT13;
+
 }	
 
 //---------------------------------------------------------------------------
@@ -77,6 +84,34 @@ void EnableInterrupts()
 
 }
 
+
+void InitXIntrupt(void) {
+
+    EALLOW;
+    GpioCtrlRegs.GPBQSEL2.bit.GPIO59 = 0;        //xint3 sync to sysclockout
+    GpioCtrlRegs.GPBQSEL2.bit.GPIO62 = 0;        //xint4 sync to sysclockout
+    GpioCtrlRegs.GPBQSEL2.bit.GPIO58 = 0;        //xint5 sync to sysclockout
+    GpioCtrlRegs.GPBQSEL2.bit.GPIO60 = 0;        //xint6 sync to sysclockout
+    GpioCtrlRegs.GPBQSEL1.bit.GPIO39 = 0;        //xint7 sync to sysclockout
+    GpioCtrlRegs.GPACTRL.bit.QUALPRD0 = 0xFF;    //Each sampling window is 510*SYSCLKOUT
+    GpioIntRegs.GPIOXINT3SEL.bit.GPIOSEL = 27;   //gpio59 as input for XINT1 LF
+    GpioIntRegs.GPIOXINT4SEL.bit.GPIOSEL = 30;   //gpio62 as input for XINT2 RF
+    GpioIntRegs.GPIOXINT5SEL.bit.GPIOSEL = 26;   //gpio58 as input for XINT3 LR
+    GpioIntRegs.GPIOXINT6SEL.bit.GPIOSEL = 28;   //gpio60 as input for XINT4 RR
+    GpioIntRegs.GPIOXINT7SEL.bit.GPIOSEL = 7;    //gpio39 as input for XINT5 button
+    EDIS;
+    XIntruptRegs.XINT3CR.bit.ENABLE = 1;          //turn on XINT3
+    XIntruptRegs.XINT4CR.bit.ENABLE = 1;          //turn on XINT4
+    XIntruptRegs.XINT5CR.bit.ENABLE = 1;          //turn on XINT5
+    XIntruptRegs.XINT6CR.bit.ENABLE = 1;          //turn on XINT6
+    XIntruptRegs.XINT7CR.bit.ENABLE = 1;          //turn on XINT7
+    XIntruptRegs.XINT3CR.bit.POLARITY = 0x1;      //rising edge
+    XIntruptRegs.XINT4CR.bit.POLARITY = 0x1;      //rising edge
+    XIntruptRegs.XINT5CR.bit.POLARITY = 0x1;      //rising edge
+    XIntruptRegs.XINT6CR.bit.POLARITY = 0x1;      //rising edge
+    XIntruptRegs.XINT7CR.bit.POLARITY = 0x0;      //rising edge
+
+}
 
 //===========================================================================
 // End of file.

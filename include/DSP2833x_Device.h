@@ -14,6 +14,27 @@
 #ifndef DSP2833x_DEVICE_H
 #define DSP2833x_DEVICE_H
 
+//###########################################################################
+// MAIN FEM PROJECT SETTINGS
+//###########################################################################
+
+#define no_diff 1
+//#define grach_diff_rules 1
+//#define grach_diff 1
+//#define phillips_diff 1
+
+#define alfa_n 55
+#define DELAY_MS(X) (DELAY_US (X*1000))
+#define Lk 160
+#define dk 114
+#define BRAKE_PEDAL_PIN         GPIO50
+#define RTDS_PIN                GPIO40
+#define START_BUTTON_PIN        GPIO34
+#define SHUTDOWN_CIRCUIT_PIN    GPIO73
+
+//###########################################################################
+// END OF MAIN FEM PROJECT SETTINGS
+//###########################################################################
 
 #ifdef __cplusplus
 extern "C" {

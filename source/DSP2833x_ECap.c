@@ -26,6 +26,78 @@ InitECap(void)
     //
     // Initialize eCAP1/2/3
     //
+    InitECap1Gpio();
+
+    ECap1Regs.ECEINT.all = 0x0000;             // Disable all capture interrupts
+    ECap1Regs.ECCLR.all = 0xFFFF;              // Clear all CAP interrupt flags
+    ECap1Regs.ECCTL1.bit.CAPLDEN = 0;          // Disable CAP1-CAP4 register loads
+    ECap1Regs.ECCTL2.bit.TSCTRSTOP = 0;        // Make sure the counter is stopped
+
+    // Configure peripheral registers
+    ECap1Regs.ECCTL2.bit.CONT_ONESHT = 0;      // One-shot
+    ECap1Regs.ECCTL2.bit.STOP_WRAP = 0;        // Stop at 1 event
+    ECap1Regs.ECCTL1.bit.CAP1POL = 0;          // Rising edge
+    ECap1Regs.ECCTL1.bit.CTRRST1 = 1;          // Difference operation
+
+    ECap1Regs.ECCTL2.bit.TSCTRSTOP = 1;        // Start Counter
+    ECap1Regs.ECCTL2.bit.REARM = 1;            // arm one-shot
+    ECap1Regs.ECCTL1.bit.CAPLDEN = 1;          // Enable CAP1-CAP4 register loads
+    ECap1Regs.ECEINT.bit.CEVT4 = 1;            // 4 events = interrupt
+
+    InitECap2Gpio();
+
+    ECap2Regs.ECEINT.all = 0x0000;             // Disable all capture interrupts
+    ECap2Regs.ECCLR.all = 0xFFFF;              // Clear all CAP interrupt flags
+    ECap2Regs.ECCTL1.bit.CAPLDEN = 0;          // Disable CAP1-CAP4 register loads
+    ECap2Regs.ECCTL2.bit.TSCTRSTOP = 0;        // Make sure the counter is stopped
+
+    // Configure peripheral registers
+    ECap2Regs.ECCTL2.bit.CONT_ONESHT = 0;      // One-shot
+    ECap2Regs.ECCTL2.bit.STOP_WRAP = 0;        // Stop at 1 event
+    ECap2Regs.ECCTL1.bit.CAP1POL = 0;          // Rising edge
+    ECap2Regs.ECCTL1.bit.CTRRST1 = 1;          // Difference operation
+
+    ECap2Regs.ECCTL2.bit.TSCTRSTOP = 1;        // Start Counter
+    ECap2Regs.ECCTL2.bit.REARM = 1;            // arm one-shot
+    ECap2Regs.ECCTL1.bit.CAPLDEN = 1;          // Enable CAP1-CAP4 register loads
+    ECap2Regs.ECEINT.bit.CEVT4 = 1;            // 4 events = interrupt
+
+    InitECap3Gpio();
+
+    ECap3Regs.ECEINT.all = 0x0000;             // Disable all capture interrupts
+    ECap3Regs.ECCLR.all = 0xFFFF;              // Clear all CAP interrupt flags
+    ECap3Regs.ECCTL1.bit.CAPLDEN = 0;          // Disable CAP1-CAP4 register loads
+    ECap3Regs.ECCTL2.bit.TSCTRSTOP = 0;        // Make sure the counter is stopped
+
+    // Configure peripheral registers
+    ECap3Regs.ECCTL2.bit.CONT_ONESHT = 0;      // One-shot
+    ECap3Regs.ECCTL2.bit.STOP_WRAP = 0;        // Stop at 1 event
+    ECap3Regs.ECCTL1.bit.CAP1POL = 0;          // Rising edge
+    ECap3Regs.ECCTL1.bit.CTRRST1 = 1;          // Difference operation
+
+    ECap3Regs.ECCTL2.bit.TSCTRSTOP = 1;        // Start Counter
+    ECap3Regs.ECCTL2.bit.REARM = 1;            // arm one-shot
+    ECap3Regs.ECCTL1.bit.CAPLDEN = 1;          // Enable CAP1-CAP4 register loads
+    ECap3Regs.ECEINT.bit.CEVT4 = 1;            // 4 events = interrupt
+
+
+    InitECap4Gpio();
+
+    ECap4Regs.ECEINT.all = 0x0000;             // Disable all capture interrupts
+    ECap4Regs.ECCLR.all = 0xFFFF;              // Clear all CAP interrupt flags
+    ECap4Regs.ECCTL1.bit.CAPLDEN = 0;          // Disable CAP1-CAP4 register loads
+    ECap4Regs.ECCTL2.bit.TSCTRSTOP = 0;        // Make sure the counter is stopped
+
+    // Configure peripheral registers
+    ECap4Regs.ECCTL2.bit.CONT_ONESHT = 0;      // One-shot
+    ECap4Regs.ECCTL2.bit.STOP_WRAP = 0;        // Stop at 1 event
+    ECap4Regs.ECCTL1.bit.CAP1POL = 0;          // Rising edge
+    ECap4Regs.ECCTL1.bit.CTRRST1 = 1;          // Difference operation
+
+    ECap4Regs.ECCTL2.bit.TSCTRSTOP = 1;        // Start Counter
+    ECap4Regs.ECCTL2.bit.REARM = 1;            // arm one-shot
+    ECap4Regs.ECCTL1.bit.CAPLDEN = 1;          // Enable CAP1-CAP4 register loads
+    ECap4Regs.ECEINT.bit.CEVT4 = 1;            // 4 events = interrupt
 }
 
 //

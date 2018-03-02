@@ -25,7 +25,6 @@ void InitAdc(void)
 {
     extern void DSP28x_usDelay(Uint32 Count);
 
-
     // *IMPORTANT*
 	// The ADC_cal function, which  copies the ADC calibration values from TI reserved
 	// OTP into the ADCREFSEL and ADCOFFTRIM registers, occurs automatically in the
@@ -41,9 +40,6 @@ void InitAdc(void)
 		ADC_cal();
 		EDIS;
 
-
-
-
     // To powerup the ADC the ADCENCLK bit should be set first to enable
     // clocks, followed by powering up the bandgap, reference circuitry, and ADC core.
     // Before the first conversion is performed a 5ms delay must be observed
@@ -55,6 +51,23 @@ void InitAdc(void)
 
     AdcRegs.ADCTRL3.all = 0x00E0;  // Power up bandgap/reference/ADC circuits
     DELAY_US(ADC_usDELAY);         // Delay before converting ADC channels
+
+    AdcRegs.ADCMAXCONV.all = 0x0004;       // Setup 5 conv's on SEQ1
+    AdcRegs.ADCCHSELSEQ1.bit.CONV00 = 0x5; // Setup ADCINA5 as 1st SEQ1 conv.
+    AdcRegs.ADCCHSELSEQ1.bit.CONV01 = 0x7; // Setup ADCINA7 as 2nd SEQ1 conv.
+    AdcRegs.ADCCHSELSEQ1.bit.CONV02 = 0x3; // Setup ADCINA3 as 3nd SEQ1 conv.
+    AdcRegs.ADCCHSELSEQ1.bit.CONV03 = 0x8; // Setup ADCINB0 as 4th SEQ1 conv.
+    AdcRegs.ADCCHSELSEQ2.bit.CONV04 = 0xA; // Setup ADCINB2 as 5th SEQ1 conv.
+    AdcRegs.ADCTRL1.bit.CONT_RUN = 0;       // Continious run
+    AdcRegs.ADCTRL3.bit.ADCCLKPS = 0xf;      // Long conversion windows
+    AdcRegs.ADCTRL1.bit.ACQ_PS = 0xF;
+    AdcRegs.ADCTRL1.bit.CPS = 1;
+}
+
+void read_ADC(void) {
+    AdcRegs.ADCTRL2.bit.SOC_SEQ1=1;
+    while (AdcRegs.ADCST.bit.INT_SEQ1!=1) {}
+    AdcRegs.ADCTRL2.bit.RST_SEQ1=1;
 }
 
 //===========================================================================

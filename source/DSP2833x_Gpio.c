@@ -60,7 +60,17 @@ void InitGpio(void)
    //GpioCtrlRegs.GPBPUD.all = 0xFFFF;    // Pullup's disabled GPIO32-GPIO34
    //GpioCtrlRegs.GPCPUD.all = 0xFFFF     // Pullup's disabled GPIO64-GPIO79
 
-   EDIS;
+
+    GpioCtrlRegs.GPADIR.bit.GPIO3 = 1; // Output led
+    GpioCtrlRegs.GPADIR.bit.GPIO4 = 1; // Output led
+    GpioCtrlRegs.GPADIR.bit.GPIO5 = 1; // Output led
+    GpioCtrlRegs.GPBDIR.bit.START_BUTTON_PIN = 0; // Input start button
+    GpioCtrlRegs.GPBDIR.bit.BRAKE_PEDAL_PIN = 0; // Input brake pedal
+    GpioCtrlRegs.GPCDIR.bit.SHUTDOWN_CIRCUIT_PIN = 0; //input killswitch input
+    GpioDataRegs.GPCSET.bit.SHUTDOWN_CIRCUIT_PIN = 1;
+    GpioCtrlRegs.GPBDIR.bit.RTDS_PIN = 1; // Output
+
+    EDIS;
 
 }	
 	

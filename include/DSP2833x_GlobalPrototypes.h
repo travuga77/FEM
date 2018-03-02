@@ -19,6 +19,34 @@
 extern "C" {
 #endif
 
+//##################################################################
+//                  Global Defines of FEM project
+//##################################################################
+extern interrupt void cpu_timer0_isr(void);
+extern interrupt void main_timer_isr(void);
+extern interrupt void can_int_isr(void);
+extern int differential_r (int K, int sigma);
+extern int differential_l (int K, int sigma);
+extern void bspd(void);
+extern void rtds(void);
+extern void rtd (void);
+extern void turnoffmf (void);
+extern void read_ADC(void);
+extern void calc_speed(void);
+extern void calc_PedalOut(void);
+extern void shutdown_detect(void);
+extern int calc_steer_wheel_spi(void);
+extern void correct_alfa(void);
+extern void send_CAN_motors (int a, int b);
+extern void send_CAN_steer (int c);
+extern void send_CAN_priborka (int left, int right);
+extern void send_CAN_datalogger (int tr0, int tr1, int tr2, int tr3);
+extern void send_CAN_motors (int a, int b);
+//##################################################################
+//              END of Global Defines of FEM project
+//##################################################################
+
+
 /*---- shared global function prototypes -----------------------------------*/
 extern void InitAdc(void);
 

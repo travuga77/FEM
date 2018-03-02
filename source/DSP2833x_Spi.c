@@ -22,7 +22,17 @@
 void InitSpi(void)
 {
    // Initialize SPI-A/B/C/D
+    SpiaRegs.SPICCR.all =0x004F;                 // Reset on, rising edge, 16-bit char bits
+    SpiaRegs.SPICTL.all =0x000F;                 // Enable master mode, normal phase,
+                                                 // enable talk, and SPI int disabled.
+    SpiaRegs.SPIBRR =0x007F;
+    SpiaRegs.SPICCR.all =0x0CF;              // Relinquish SPI from Reset
+    SpiaRegs.SPIPRI.bit.FREE = 1;                // Set so breakpoints disturb xmission
 
+    // Initialize SPI FIFO registers
+    SpiaRegs.SPIFFTX.all=0xE040;
+    SpiaRegs.SPIFFRX.all=0x204f;
+    SpiaRegs.SPIFFCT.all=0x0;
    //tbd...
  
 }
@@ -54,6 +64,8 @@ void InitSpiaGpio()
 {
 
    EALLOW;
+
+   GpioCtrlRegs.GPADIR.bit.GPIO17 = 0; // input spi
 /* Enable internal pull-up for the selected pins */
 // Pull-ups can be enabled or disabled by the user.  
 // This will enable the pullups for the specified pins.

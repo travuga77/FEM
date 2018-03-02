@@ -24,7 +24,13 @@ C_SRCS += \
 ../source/DSP2833x_PieVect.c \
 ../source/DSP2833x_Spi.c \
 ../source/DSP2833x_SysCtrl.c \
-../source/DSP2833x_Xintf.c 
+../source/DSP2833x_Xintf.c \
+../source/FEM_differential.c \
+../source/FEM_pedal.c \
+../source/FEM_safety.c \
+../source/FEM_send_CAN.c \
+../source/FEM_speed.c \
+../source/FEM_steering.c 
 
 C_DEPS += \
 ./source/DSP2833x_Adc.d \
@@ -39,7 +45,13 @@ C_DEPS += \
 ./source/DSP2833x_PieVect.d \
 ./source/DSP2833x_Spi.d \
 ./source/DSP2833x_SysCtrl.d \
-./source/DSP2833x_Xintf.d 
+./source/DSP2833x_Xintf.d \
+./source/FEM_differential.d \
+./source/FEM_pedal.d \
+./source/FEM_safety.d \
+./source/FEM_send_CAN.d \
+./source/FEM_speed.d \
+./source/FEM_steering.d 
 
 OBJS += \
 ./source/DSP2833x_ADC_cal.obj \
@@ -58,7 +70,13 @@ OBJS += \
 ./source/DSP2833x_Spi.obj \
 ./source/DSP2833x_SysCtrl.obj \
 ./source/DSP2833x_Xintf.obj \
-./source/DSP2833x_usDelay.obj 
+./source/DSP2833x_usDelay.obj \
+./source/FEM_differential.obj \
+./source/FEM_pedal.obj \
+./source/FEM_safety.obj \
+./source/FEM_send_CAN.obj \
+./source/FEM_speed.obj \
+./source/FEM_steering.obj 
 
 ASM_DEPS += \
 ./source/DSP2833x_ADC_cal.d \
@@ -83,7 +101,13 @@ OBJS__QUOTED += \
 "source\DSP2833x_Spi.obj" \
 "source\DSP2833x_SysCtrl.obj" \
 "source\DSP2833x_Xintf.obj" \
-"source\DSP2833x_usDelay.obj" 
+"source\DSP2833x_usDelay.obj" \
+"source\FEM_differential.obj" \
+"source\FEM_pedal.obj" \
+"source\FEM_safety.obj" \
+"source\FEM_send_CAN.obj" \
+"source\FEM_speed.obj" \
+"source\FEM_steering.obj" 
 
 C_DEPS__QUOTED += \
 "source\DSP2833x_Adc.d" \
@@ -98,7 +122,13 @@ C_DEPS__QUOTED += \
 "source\DSP2833x_PieVect.d" \
 "source\DSP2833x_Spi.d" \
 "source\DSP2833x_SysCtrl.d" \
-"source\DSP2833x_Xintf.d" 
+"source\DSP2833x_Xintf.d" \
+"source\FEM_differential.d" \
+"source\FEM_pedal.d" \
+"source\FEM_safety.d" \
+"source\FEM_send_CAN.d" \
+"source\FEM_speed.d" \
+"source\FEM_steering.d" 
 
 ASM_DEPS__QUOTED += \
 "source\DSP2833x_ADC_cal.d" \
@@ -125,6 +155,12 @@ C_SRCS__QUOTED += \
 "../source/DSP2833x_PieVect.c" \
 "../source/DSP2833x_Spi.c" \
 "../source/DSP2833x_SysCtrl.c" \
-"../source/DSP2833x_Xintf.c" 
+"../source/DSP2833x_Xintf.c" \
+"../source/FEM_differential.c" \
+"../source/FEM_pedal.c" \
+"../source/FEM_safety.c" \
+"../source/FEM_send_CAN.c" \
+"../source/FEM_speed.c" \
+"../source/FEM_steering.c" 
 
 
