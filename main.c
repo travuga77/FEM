@@ -1,5 +1,9 @@
+//######################################################################
+// MAIN FILE OF FE MADI PROJECT
+//######################################################################
+
 #include "DSP28x_Project.h"
-#include <math.h>
+
 
 int PedalOut=0;  //main output from pedal
 int alfa=alfa_n; //
@@ -10,8 +14,9 @@ int voltage_bms=0;
 int count;
 int temp1=0, temp2=0;
 int m=0;
+int our_charge = 0;
 float current_bms=0;
-extern long speed, speedr, speedf;
+extern float speed, speedr, speedf;
 extern int flag;
 extern int minspeedr, minspeedf;
 extern int error_code;
@@ -31,6 +36,7 @@ interrupt void main_timer_isr(void) {
 
 	calc_PedalOut();
 
+	send_CAN_sync_message();
 	//if (PedalOut>1200) PedalOut=1200;
 	bspd();
 	//tang=tan(SteerOut*3.1415/180);
@@ -41,9 +47,19 @@ interrupt void main_timer_isr(void) {
 	    send_CAN_motors(PedalOut*flag, PedalOut*flag);
 
     voltage_bms=(ECanbMboxes.MBOX28.MDL.all)*0.0015;
-    current_bms=ECanbMboxes.MBOX29.MDL.word.HI_WORD/10;
 
-    send_CAN_priborka(minspeedr*100,speedr*100);
+
+
+    //(98-67)=31 - 100%
+    //(voltage_bms-67) - %
+
+int our_max_voltage = 98;
+int our_low_voltage = 67;
+    our_charge = ((voltage_bms-our_low_voltage)*100)/(our_max_voltage-our_low_voltage);
+
+
+    current_bms=ECanbMboxes.MBOX29.MDL.word.LOW_WORD;
+    send_CAN_priborka(our_charge,speedf);
     send_CAN_steer(SteerOut);
     send_CAN_datalogger(minspeedr*100,speedr*100,minspeedf*100,speedf*100);
 
@@ -77,6 +93,13 @@ void main(void){
 // Initialize the PIE vector table with pointers to the shell Interrupt Service Routines (ISR)
 // This will populate the entire table, even if the interrupt is not used in this example
 	InitPieVectTable();
+
+	// Enable Xint3 in the PIE: Group 12 interrupt 1
+    PieCtrlRegs.PIECTRL.bit.ENPIE = 1;   // Enable the PIE block
+    PieCtrlRegs.PIEIER9.bit.INTx7 = 1;  // Enable PIE Group 9 INTx7
+
+    IER |= M_INT12; // Enable CPU int12
+    IER |= M_INT13;
 // Interrupts that are used in this example are re-mapped to ISR functions found within this file.
 	EALLOW;
 	//PieVectTable.TINT0 = &cpu_timer0_isr;
@@ -100,7 +123,16 @@ void main(void){
 
 	InitXIntrupt();
 
+	//ConfigCpuTimer(&CpuTimer0, 100, 500);
+    ConfigCpuTimer(&CpuTimer1, 100, 50000);
+    //CpuTimer0Regs.TCR.all = 0x4000; // Use write-only instruction to set TSS bit = 0
+    CpuTimer1Regs.TCR.all = 0x4000; // Use write-only instruction to set TSS bit = 0
+
+    EnableInterrupts();
+
 	rtd();
+
+
 
 	while(1)
 	{

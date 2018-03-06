@@ -6,9 +6,8 @@
  */
 
 #include "DSP28x_Project.h"
-#include <math.h>
 
-float speedf=0.0, speedr=0.0, speedRR=0.0, speedLR=0.0, speedRF=0.0, speedLF=0.0, speed=0.0;
+float speedf=0.0, speedr=0.0f, speedRR=0.0, speedLR=0.0, speedRF=0.0, speedLF=0.0, speed=0.0;
 
 void calc_speed(void) {
     if (ECap1Regs.CAP1>30000000 || ECap1Regs.CAP1==0)

@@ -6,7 +6,6 @@
  */
 
 #include "DSP28x_Project.h"
-#include <math.h>
 
 void spi_xmit(Uint16 a)
 {

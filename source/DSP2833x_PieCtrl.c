@@ -56,12 +56,7 @@ void InitPieCtrl(void)
 	PieCtrlRegs.PIEIFR12.all = 0;
 
 
-// Enable Xint3 in the PIE: Group 12 interrupt 1
-    PieCtrlRegs.PIECTRL.bit.ENPIE = 1;   // Enable the PIE block
-    PieCtrlRegs.PIEIER9.bit.INTx7 = 1;  // Enable PIE Group 9 INTx7
 
-    IER |= M_INT12; // Enable CPU int12
-    IER |= M_INT13;
 
 }	
 

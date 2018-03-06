@@ -6,7 +6,6 @@
  */
 
 #include "DSP28x_Project.h"
-#include <math.h>
 
 void send_CAN_steer (int c) {
 
@@ -115,4 +114,19 @@ void send_CAN_motors (int a, int b) {
         ECanbRegs.CANTA.all = ECanbShadow.CANTA.all;
 }
 
+void send_CAN_sync_message(void){
 
+    volatile struct ECAN_REGS ECanbShadow;
+
+    ECanbShadow.CANTRS.all = 0;
+        ECanbShadow.CANTRS.bit.TRS11 = 1;
+        ECanbRegs.CANTRS.all = ECanbShadow.CANTRS.all;
+    do
+    {
+        ECanbShadow.CANTA.all = ECanbRegs.CANTA.all;
+    } while (ECanbShadow.CANTA.bit.TA11 == 0);              // Wait for TA11 bit to be set...
+    ECanbShadow.CANTA.all = 0;
+        ECanbShadow.CANTA.bit.TA11 = 1;                     // Clear TA11
+        ECanbRegs.CANTA.all = ECanbShadow.CANTA.all;
+
+}

@@ -69,10 +69,6 @@ void InitCpuTimers(void)
     CpuTimer1.InterruptCount = 0;
     CpuTimer2.InterruptCount = 0;
 
-    //ConfigCpuTimer(&CpuTimer0, 100, 500);
-    ConfigCpuTimer(&CpuTimer1, 100, 50000);
-    //CpuTimer0Regs.TCR.all = 0x4000; // Use write-only instruction to set TSS bit = 0
-    CpuTimer1Regs.TCR.all = 0x4000; // Use write-only instruction to set TSS bit = 0
 
 
 }

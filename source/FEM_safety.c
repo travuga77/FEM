@@ -6,7 +6,6 @@
  */
 
 #include "DSP28x_Project.h"
-#include <math.h>
 
 int err=0;
 int flag=1;
@@ -23,12 +22,8 @@ void bspd(void)
 
 void rtds(void)
 {
-    unsigned long r=0;
     GpioDataRegs.GPBSET.bit.RTDS_PIN=1;
-    while (r<1000000)
-    {
-        r++;
-    }
+    DELAY_MS(1500);
     GpioDataRegs.GPBCLEAR.bit.RTDS_PIN=1;
     GpioDataRegs.GPACLEAR.bit.GPIO3=1;
     GpioDataRegs.GPACLEAR.bit.GPIO4=1;

@@ -6,7 +6,6 @@
  */
 
 #include "DSP28x_Project.h"
-#include <math.h>
 
 int PedalOutmin1=0;
 int n=0;
@@ -52,7 +51,7 @@ void calc_PedalOut (void){
     if (PedalOut<0) PedalOut=0;
     if (PedalOut>4095) PedalOut=4095;
 
-    correct_alfa();
+    //correct_alfa();
     pol=4095*1.3*speedf/98+300;
     if (pol>4095) pol=4095;
     if (PedalOut>=PedalOutmin1+alfa) {

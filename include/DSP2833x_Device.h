@@ -18,9 +18,9 @@
 // MAIN FEM PROJECT SETTINGS
 //###########################################################################
 
-#define no_diff 1
+//#define no_diff 1
 //#define grach_diff_rules 1
-//#define grach_diff 1
+#define grach_diff 1
 //#define phillips_diff 1
 
 #define alfa_n 55
