@@ -60,7 +60,6 @@ void InitGpio(void)
    //GpioCtrlRegs.GPBPUD.all = 0xFFFF;    // Pullup's disabled GPIO32-GPIO34
    //GpioCtrlRegs.GPCPUD.all = 0xFFFF     // Pullup's disabled GPIO64-GPIO79
 
-
     GpioCtrlRegs.GPADIR.bit.GPIO3 = 1; // Output led
     GpioCtrlRegs.GPADIR.bit.GPIO4 = 1; // Output led
     GpioCtrlRegs.GPADIR.bit.GPIO5 = 1; // Output led

@@ -142,6 +142,7 @@ interrupt void main_timer_isr(void) {
 	InitGpio();
 
 	InitECap();
+	InitECapGpio();
 
 	InitSpi();
 	InitSpiGpio();

@@ -28,11 +28,11 @@ void calc_speed(void) {
         speedRF=10406250*3.6/ECap3Regs.CAP1;
         ECap3Regs.CAP1=0;
     }
-    if (ECap4Regs.CAP1>30000000 || ECap4Regs.CAP1==0)
+    if (ECap6Regs.CAP1>30000000 || ECap6Regs.CAP1==0)
         speedLF=0;
     else {
-        speedLF=10406250*3.6/ECap4Regs.CAP1;
-        ECap4Regs.CAP1=0;
+        speedLF=10406250*3.6/ECap6Regs.CAP1;
+        ECap6Regs.CAP1=0;
     }
 
     speedf=(speedRF+speedLF)/2;
