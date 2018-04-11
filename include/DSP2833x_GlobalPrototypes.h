@@ -37,6 +37,7 @@ extern void read_ADC(void);
 extern void calc_speed(void);
 extern void calc_PedalOut(void);
 extern void shutdown_detect(void);
+extern void stop_light(void);
 extern int calc_steer_wheel_spi(void);
 extern void correct_alfa(void);
 extern void send_CAN_motors (int a, int b);

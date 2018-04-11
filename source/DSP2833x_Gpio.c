@@ -66,9 +66,11 @@ void InitGpio(void)
     GpioCtrlRegs.GPADIR.bit.GPIO5 = 1; // Output led
     GpioCtrlRegs.GPBDIR.bit.START_BUTTON_PIN = 0; // Input start button
     GpioCtrlRegs.GPBDIR.bit.BRAKE_PEDAL_PIN = 0; // Input brake pedal
+    GpioCtrlRegs.GPBDIR.bit.BRAKE_LIGHT_PIN = 1; // Output brake light
+    GpioDataRegs.GPBCLEAR.bit.BRAKE_LIGHT_PIN = 1; // Set low brake light
     GpioCtrlRegs.GPCDIR.bit.SHUTDOWN_CIRCUIT_PIN = 0; //input killswitch input
-    GpioDataRegs.GPCSET.bit.SHUTDOWN_CIRCUIT_PIN = 1;
-    GpioCtrlRegs.GPBDIR.bit.RTDS_PIN = 1; // Output
+    GpioDataRegs.GPCSET.bit.SHUTDOWN_CIRCUIT_PIN = 1; // set high killswitch input
+    GpioCtrlRegs.GPBDIR.bit.RTDS_PIN = 1; // Output RTDS
 
     EDIS;
 

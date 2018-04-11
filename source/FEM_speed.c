@@ -7,7 +7,7 @@
 
 #include "DSP28x_Project.h"
 
-float speedf=0.0, speedr=0.0f, speedRR=0.0, speedLR=0.0, speedRF=0.0, speedLF=0.0, speed=0.0;
+float speedf=0.0, speedr=0.0, speedRR=0.0, speedLR=0.0, speedRF=0.0, speedLF=0.0, speed=0.0;
 
 void calc_speed(void) {
     if (ECap1Regs.CAP1>30000000 || ECap1Regs.CAP1==0)
@@ -23,15 +23,15 @@ void calc_speed(void) {
         ECap2Regs.CAP1=0;
     }
     if (ECap3Regs.CAP1>30000000 || ECap3Regs.CAP1==0)
-        speedLF=0;
+        speedRF=0;
     else {
-        speedLF=10406250*3.6/ECap3Regs.CAP1;
+        speedRF=10406250*3.6/ECap3Regs.CAP1;
         ECap3Regs.CAP1=0;
     }
     if (ECap4Regs.CAP1>30000000 || ECap4Regs.CAP1==0)
-        speedRF=0;
+        speedLF=0;
     else {
-        speedRF=10406250*3.6/ECap4Regs.CAP1;
+        speedLF=10406250*3.6/ECap4Regs.CAP1;
         ECap4Regs.CAP1=0;
     }
 

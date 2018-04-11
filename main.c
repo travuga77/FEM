@@ -3,23 +3,31 @@
 //######################################################################
 
 #include "DSP28x_Project.h"
-
+#include "pid_controller.h"
 
 int PedalOut=0;  //main output from pedal
-int alfa=alfa_n; //
+int send_motors=0;
+int alfa=ALFA; //
 int mb_temp=0;
 int SteerOut=0;  //main output from steering wheel
 int i=0,t=0;
-int voltage_bms=0;
 int count;
 int temp1=0, temp2=0;
-int m=0;
-int our_charge = 0;
-float current_bms=0;
-extern float speed, speedr, speedf;
+int SoC = 0;
+int send_motors_min_1=0;
+float voltage_left_motor=0.0, voltage_right_motor=0.0;
+float current_left_motor=0.0, current_right_motor=0.0;
+float voltage_bms=0.0;
+float current_bms=0.0;
+float current_acc_cont=0.0;
+extern float speed, speedr, speedf, speedLF, speedRF, speedLR, speedRR;
 extern int flag;
 extern int minspeedr, minspeedf;
 extern int error_code;
+int sw_buttons=0;
+
+
+PIDControl mainPID;
 
 /*
 interrupt void cpu_timer0_isr(void)
@@ -41,34 +49,58 @@ interrupt void main_timer_isr(void) {
 	bspd();
 	//tang=tan(SteerOut*3.1415/180);
 	SteerOut=calc_steer_wheel_spi();
-	if (fabs(SteerOut)>5)
-	    send_CAN_motors(differential_r(PedalOut,SteerOut)*flag, differential_l(PedalOut,SteerOut)*flag);
-	else
-	    send_CAN_motors(PedalOut*flag, PedalOut*flag);
 
-    voltage_bms=(ECanbMboxes.MBOX28.MDL.all)*0.0015;
+	if (GpioDataRegs.GPADAT.bit.GPIO9==1) GpioDataRegs.GPASET.bit.GPIO5=1; else GpioDataRegs.GPACLEAR.bit.GPIO5=1;
 
+
+	sw_buttons =  ECanbMboxes.MBOX21.MDL.word.LOW_WORD;
+    voltage_bms = (ECanbMboxes.MBOX28.MDL.all)*0.0015;
+    current_bms = ECanbMboxes.MBOX29.MDL.word.LOW_WORD;
+    voltage_left_motor = ECanbMboxes.MBOX15.MDL.word.LOW_WORD/10;
+    voltage_right_motor = ECanbMboxes.MBOX16.MDL.word.LOW_WORD/10;
+    current_left_motor = ECanbMboxes.MBOX15.MDL.word.HI_WORD/10;
+    current_right_motor = ECanbMboxes.MBOX16.MDL.word.HI_WORD/10;
+    current_acc_cont = ECanbMboxes.MBOX20.MDL.word.LOW_WORD/10;
+    if (current_acc_cont<0) current_acc_cont=0;
+
+
+    //PIDInputSet(&mainPID,speedr-speedf);
+    //PIDCompute(&mainPID);
+    send_motors=PedalOut;
+    //send_motors*=(50-PIDOutputGet(&mainPID))/50;
+
+    if (send_motors>=send_motors_min_1+alfa) {
+        send_motors=send_motors_min_1+alfa;
+    }
+    send_motors_min_1=send_motors;
 
 
     //(98-67)=31 - 100%
     //(voltage_bms-67) - %
 
-int our_max_voltage = 98;
-int our_low_voltage = 67;
-    our_charge = ((voltage_bms-our_low_voltage)*100)/(our_max_voltage-our_low_voltage);
 
+    SoC = (voltage_bms-MIN_VOLTAGE)*100/(MAX_VOLTAGE-MIN_VOLTAGE);
 
-    current_bms=ECanbMboxes.MBOX29.MDL.word.LOW_WORD;
-    send_CAN_priborka(our_charge,speedf);
+    //send_motors=PedalOut;
+
+    if (send_motors<0) send_motors=0;
+    if (send_motors>4095) send_motors=4095;
+
+    if (fabs(SteerOut)>5)
+        send_CAN_motors(differential_r(send_motors,SteerOut)*flag, differential_l(send_motors,SteerOut)*flag);
+    else
+        send_CAN_motors(send_motors*flag, send_motors*flag);
+
+    send_CAN_priborka(voltage_bms,speedf);
     send_CAN_steer(SteerOut);
-    send_CAN_datalogger(minspeedr*100,speedr*100,minspeedf*100,speedf*100);
+    send_CAN_datalogger(speedLF,speedRF,speedLR,speedRR);
 
 #ifdef FLASH
 	shutdown_detect();
 #endif
 }
 
-void main(void){
+ void main(void){
 // Initialize System Control: PLL, WatchDog, enable Peripheral Clocks
     InitSysCtrl();
 
@@ -132,11 +164,12 @@ void main(void){
 
 	rtd();
 
-
+	//PIDInit(&mainPID,1,0,0,0.05,0,50,AUTOMATIC,REVERSE);
+    //PIDSetpointSet(&mainPID,0);
 
 	while(1)
 	{
-
+	    stop_light();
 	}
 }
 //========================================================================

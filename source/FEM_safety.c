@@ -40,12 +40,12 @@ void rtd (void)
         if (!GpioDataRegs.GPBDAT.bit.BRAKE_PEDAL_PIN==1)
         {
             GpioDataRegs.GPASET.bit.GPIO3=1;
-            //GpioDataRegs.GPBSET.bit.GPIO47=1;
+            GpioDataRegs.GPBSET.bit.BRAKE_LIGHT_PIN=1;
         }
         else
         {
             GpioDataRegs.GPACLEAR.bit.GPIO3=1;
-            //GpioDataRegs.GPBCLEAR.bit.GPIO47=1;
+            GpioDataRegs.GPBCLEAR.bit.BRAKE_LIGHT_PIN=1;
         }
 
     #ifdef FLASH
@@ -83,4 +83,13 @@ void shutdown_detect(void) {
         else {
             err=0;
         }
+}
+
+void stop_light(void) {
+    if (!GpioDataRegs.GPBDAT.bit.BRAKE_PEDAL_PIN==1) {
+        GpioDataRegs.GPBSET.bit.BRAKE_LIGHT_PIN=1;
+    }
+    else {
+        GpioDataRegs.GPBCLEAR.bit.BRAKE_LIGHT_PIN=1;
+    }
 }

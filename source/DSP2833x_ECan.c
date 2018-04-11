@@ -289,10 +289,12 @@ void InitECanb(void)		// Initialize eCAN-B module
 
 /* Write to the MSGID field  */
 
+    ECanbMboxes.MBOX21.MSGID.all = 0;
     ECanbMboxes.MBOX10.MSGID.all = 0; // Standart Identifier
     ECanbMboxes.MBOX11.MSGID.all = 0; // Standart Identifier
     ECanbMboxes.MBOX15.MSGID.all = 0; // Standart Identifier
     ECanbMboxes.MBOX16.MSGID.all = 0; // Standart Identifier
+    ECanbMboxes.MBOX20.MSGID.all = 0; // Standart Identifier
     ECanbMboxes.MBOX24.MSGID.all = 0; // Standart Identifier
     ECanbMboxes.MBOX25.MSGID.all = 0; // Standart Identifier
     ECanbMboxes.MBOX26.MSGID.all = 0; // Standart Identifier
@@ -304,19 +306,26 @@ void InitECanb(void)		// Initialize eCAN-B module
 
     ECanbMboxes.MBOX10.MSGID.bit.STDMSGID = 0x136; // Standart Identifier datalogger
     ECanbMboxes.MBOX24.MSGID.bit.STDMSGID = 0x400; // Standart Identifier steering
-    ECanbMboxes.MBOX25.MSGID.bit.STDMSGID = 0x220; // Standart Identifier motor left
+    ECanbMboxes.MBOX25.MSGID.bit.STDMSGID = 0x222; // Standart Identifier motor left
     ECanbMboxes.MBOX26.MSGID.bit.STDMSGID = 0x221; // Standart Identifier motor right
     ECanbMboxes.MBOX27.MSGID.bit.STDMSGID = 0x120; // Standart Identifier dashboard
     ECanbMboxes.MBOX11.MSGID.bit.STDMSGID = 0x80;  // sync mes
 
 
     ECanbMboxes.MBOX28.MSGID.bit.AME=1;
+    ECanbLAMRegs.LAM21.all=0x80000000;
+    ECanbLAMRegs.LAM15.all=0x80000000;
+    ECanbLAMRegs.LAM16.all=0x80000000;
+    ECanbLAMRegs.LAM20.all=0x80000000;
     ECanbLAMRegs.LAM28.all=0x80000000;
     ECanbLAMRegs.LAM29.all=0x80000000;
     ECanbLAMRegs.LAM30.all=0x80000000;
     ECanbLAMRegs.LAM31.all=0x80000000;
-    ECanbMboxes.MBOX15.MSGID.bit.STDMSGID = 0x1A0; // left motor info
+
+    ECanbMboxes.MBOX21.MSGID.bit.STDMSGID = 0x121; //from priborka
+    ECanbMboxes.MBOX15.MSGID.bit.STDMSGID = 0x1A2; // left motor info
     ECanbMboxes.MBOX16.MSGID.bit.STDMSGID = 0x1A1; // right motor info
+    ECanbMboxes.MBOX20.MSGID.bit.STDMSGID = 0x230; // acc container current
     ECanbMboxes.MBOX28.MSGID.bit.STDMSGID = 0x3A0; // bms voltage and temp
     ECanbMboxes.MBOX29.MSGID.bit.STDMSGID = 0x4A0; // Standart Identifier
     ECanbMboxes.MBOX30.MSGID.bit.STDMSGID = 0x150; // Standart Identifier
@@ -331,8 +340,10 @@ void InitECanb(void)		// Initialize eCAN-B module
     ECanbShadow.CANMD.bit.MD25 = 0;
     ECanbShadow.CANMD.bit.MD26 = 0;
     ECanbShadow.CANMD.bit.MD27 = 0;
+    ECanbShadow.CANMD.bit.MD21 = 1;
     ECanbShadow.CANMD.bit.MD15 = 1;
     ECanbShadow.CANMD.bit.MD16 = 1;
+    ECanbShadow.CANMD.bit.MD20 = 1;
     ECanbShadow.CANMD.bit.MD28 = 1;
     ECanbShadow.CANMD.bit.MD29 = 1;
     ECanbShadow.CANMD.bit.MD30 = 1;
@@ -348,8 +359,10 @@ void InitECanb(void)		// Initialize eCAN-B module
     ECanbShadow.CANME.bit.ME25 = 1;
     ECanbShadow.CANME.bit.ME26 = 1;
     ECanbShadow.CANME.bit.ME27 = 1;
+    ECanbShadow.CANME.bit.ME21 = 1;
     ECanbShadow.CANME.bit.ME15 = 1;
     ECanbShadow.CANME.bit.ME16 = 1;
+    ECanbShadow.CANME.bit.ME20 = 1;
     ECanbShadow.CANME.bit.ME28 = 1;
     ECanbShadow.CANME.bit.ME29 = 1;
     ECanbShadow.CANME.bit.ME30 = 1;
@@ -368,18 +381,12 @@ void InitECanb(void)		// Initialize eCAN-B module
 
 /* Write to DLC field in Master Control reg */
 
-    ECanbMboxes.MBOX10.MSGCTRL.bit.DLC = 8;
+    ECanbMboxes.MBOX10.MSGCTRL.bit.DLC = 8; //transmit only
     ECanbMboxes.MBOX11.MSGCTRL.bit.DLC = 1;
     ECanbMboxes.MBOX24.MSGCTRL.bit.DLC = 1;
     ECanbMboxes.MBOX25.MSGCTRL.bit.DLC = 2;
     ECanbMboxes.MBOX26.MSGCTRL.bit.DLC = 2;
     ECanbMboxes.MBOX27.MSGCTRL.bit.DLC = 4;
-    ECanbMboxes.MBOX15.MSGCTRL.bit.DLC = 6;
-    ECanbMboxes.MBOX16.MSGCTRL.bit.DLC = 6;
-    ECanbMboxes.MBOX28.MSGCTRL.bit.DLC = 6;
-    ECanbMboxes.MBOX29.MSGCTRL.bit.DLC = 6;
-    ECanbMboxes.MBOX30.MSGCTRL.bit.DLC = 2;
-    ECanbMboxes.MBOX31.MSGCTRL.bit.DLC = 2;
 
 /* Write to the mailbox RAM field */
 
