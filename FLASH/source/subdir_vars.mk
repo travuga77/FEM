@@ -27,11 +27,11 @@ C_SRCS += \
 ../source/DSP2833x_Xintf.c \
 ../source/FEM_differential.c \
 ../source/FEM_pedal.c \
-../source/FEM_read_CAN.c \
 ../source/FEM_safety.c \
 ../source/FEM_send_CAN.c \
 ../source/FEM_speed.c \
-../source/FEM_steering.c 
+../source/FEM_steering.c \
+../source/FEM_traction.c 
 
 C_DEPS += \
 ./source/DSP2833x_Adc.d \
@@ -49,11 +49,11 @@ C_DEPS += \
 ./source/DSP2833x_Xintf.d \
 ./source/FEM_differential.d \
 ./source/FEM_pedal.d \
-./source/FEM_read_CAN.d \
 ./source/FEM_safety.d \
 ./source/FEM_send_CAN.d \
 ./source/FEM_speed.d \
-./source/FEM_steering.d 
+./source/FEM_steering.d \
+./source/FEM_traction.d 
 
 OBJS += \
 ./source/DSP2833x_ADC_cal.obj \
@@ -75,11 +75,11 @@ OBJS += \
 ./source/DSP2833x_usDelay.obj \
 ./source/FEM_differential.obj \
 ./source/FEM_pedal.obj \
-./source/FEM_read_CAN.obj \
 ./source/FEM_safety.obj \
 ./source/FEM_send_CAN.obj \
 ./source/FEM_speed.obj \
-./source/FEM_steering.obj 
+./source/FEM_steering.obj \
+./source/FEM_traction.obj 
 
 ASM_DEPS += \
 ./source/DSP2833x_ADC_cal.d \
@@ -107,11 +107,11 @@ OBJS__QUOTED += \
 "source\DSP2833x_usDelay.obj" \
 "source\FEM_differential.obj" \
 "source\FEM_pedal.obj" \
-"source\FEM_read_CAN.obj" \
 "source\FEM_safety.obj" \
 "source\FEM_send_CAN.obj" \
 "source\FEM_speed.obj" \
-"source\FEM_steering.obj" 
+"source\FEM_steering.obj" \
+"source\FEM_traction.obj" 
 
 C_DEPS__QUOTED += \
 "source\DSP2833x_Adc.d" \
@@ -129,11 +129,11 @@ C_DEPS__QUOTED += \
 "source\DSP2833x_Xintf.d" \
 "source\FEM_differential.d" \
 "source\FEM_pedal.d" \
-"source\FEM_read_CAN.d" \
 "source\FEM_safety.d" \
 "source\FEM_send_CAN.d" \
 "source\FEM_speed.d" \
-"source\FEM_steering.d" 
+"source\FEM_steering.d" \
+"source\FEM_traction.d" 
 
 ASM_DEPS__QUOTED += \
 "source\DSP2833x_ADC_cal.d" \
@@ -163,10 +163,10 @@ C_SRCS__QUOTED += \
 "../source/DSP2833x_Xintf.c" \
 "../source/FEM_differential.c" \
 "../source/FEM_pedal.c" \
-"../source/FEM_read_CAN.c" \
 "../source/FEM_safety.c" \
 "../source/FEM_send_CAN.c" \
 "../source/FEM_speed.c" \
-"../source/FEM_steering.c" 
+"../source/FEM_steering.c" \
+"../source/FEM_traction.c" 
 
 

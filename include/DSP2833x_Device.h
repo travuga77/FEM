@@ -26,7 +26,7 @@
 #define MAX_VOLTAGE 98
 #define MIN_VOLTAGE 67
 
-#define ALFA 55
+#define ALFA 95
 #define DELAY_MS(X) (DELAY_US (X*1000))
 #define Lk 160
 #define dk 114
@@ -156,9 +156,9 @@ typedef long double        float64;
 #define DSP28_ECAP1  1
 #define DSP28_ECAP2  1
 #define DSP28_ECAP3  1
-#define DSP28_ECAP4  0
+#define DSP28_ECAP4  1
 #define DSP28_ECAP5  0
-#define DSP28_ECAP6  1
+#define DSP28_ECAP6  0
 #define DSP28_EQEP1  1
 #define DSP28_EQEP2  1
 #define DSP28_ECANA  0

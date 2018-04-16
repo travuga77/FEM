@@ -138,13 +138,6 @@ source/FEM_pedal.obj: ../source/FEM_pedal.c $(GEN_OPTS) | $(GEN_HDRS)
 	@echo 'Finished building: "$<"'
 	@echo ' '
 
-source/FEM_read_CAN.obj: ../source/FEM_read_CAN.c $(GEN_OPTS) | $(GEN_HDRS)
-	@echo 'Building file: "$<"'
-	@echo 'Invoking: C2000 Compiler'
-	"C:/ti/ccsv7/tools/compiler/ti-cgt-c2000_16.9.7.LTS/bin/cl2000" -v28 -ml -mt --float_support=fpu32 -O2 --opt_for_speed=2 --include_path="C:/ti/workspace_v7/FEM3/include" --include_path="C:/ti/ccsv7/tools/compiler/ti-cgt-c2000_16.9.7.LTS/include" --advice:performance=all --define=_INLINE --define=RAM -g --diag_warning=225 --diag_wrap=off --display_error_number --preproc_with_compile --preproc_dependency="source/FEM_read_CAN.d_raw" --obj_directory="source" $(GEN_OPTS__FLAG) "$<"
-	@echo 'Finished building: "$<"'
-	@echo ' '
-
 source/FEM_safety.obj: ../source/FEM_safety.c $(GEN_OPTS) | $(GEN_HDRS)
 	@echo 'Building file: "$<"'
 	@echo 'Invoking: C2000 Compiler'
@@ -170,6 +163,13 @@ source/FEM_steering.obj: ../source/FEM_steering.c $(GEN_OPTS) | $(GEN_HDRS)
 	@echo 'Building file: "$<"'
 	@echo 'Invoking: C2000 Compiler'
 	"C:/ti/ccsv7/tools/compiler/ti-cgt-c2000_16.9.7.LTS/bin/cl2000" -v28 -ml -mt --float_support=fpu32 -O2 --opt_for_speed=2 --include_path="C:/ti/workspace_v7/FEM3/include" --include_path="C:/ti/ccsv7/tools/compiler/ti-cgt-c2000_16.9.7.LTS/include" --advice:performance=all --define=_INLINE --define=RAM -g --diag_warning=225 --diag_wrap=off --display_error_number --preproc_with_compile --preproc_dependency="source/FEM_steering.d_raw" --obj_directory="source" $(GEN_OPTS__FLAG) "$<"
+	@echo 'Finished building: "$<"'
+	@echo ' '
+
+source/FEM_traction.obj: ../source/FEM_traction.c $(GEN_OPTS) | $(GEN_HDRS)
+	@echo 'Building file: "$<"'
+	@echo 'Invoking: C2000 Compiler'
+	"C:/ti/ccsv7/tools/compiler/ti-cgt-c2000_16.9.7.LTS/bin/cl2000" -v28 -ml -mt --float_support=fpu32 -O2 --opt_for_speed=2 --include_path="C:/ti/workspace_v7/FEM3/include" --include_path="C:/ti/ccsv7/tools/compiler/ti-cgt-c2000_16.9.7.LTS/include" --advice:performance=all --define=_INLINE --define=RAM -g --diag_warning=225 --diag_wrap=off --display_error_number --preproc_with_compile --preproc_dependency="source/FEM_traction.d_raw" --obj_directory="source" $(GEN_OPTS__FLAG) "$<"
 	@echo 'Finished building: "$<"'
 	@echo ' '
 

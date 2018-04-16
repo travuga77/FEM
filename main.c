@@ -4,6 +4,7 @@
 
 #include "DSP28x_Project.h"
 #include "pid_controller.h"
+#include <math.h>
 
 int PedalOut=0;  //main output from pedal
 int send_motors=0;
@@ -15,6 +16,7 @@ int count;
 int temp1=0, temp2=0;
 int SoC = 0;
 int send_motors_min_1=0;
+float slip=0.0;
 float voltage_left_motor=0.0, voltage_right_motor=0.0;
 float current_left_motor=0.0, current_right_motor=0.0;
 float voltage_bms=0.0;
@@ -64,10 +66,13 @@ interrupt void main_timer_isr(void) {
     if (current_acc_cont<0) current_acc_cont=0;
 
 
-    //PIDInputSet(&mainPID,speedr-speedf);
+    slip = (speedr-speedf)/(speedf+0.01);
+    //PIDInputSet(&mainPID,slip);
     //PIDCompute(&mainPID);
     send_motors=PedalOut;
-    //send_motors*=(50-PIDOutputGet(&mainPID))/50;
+    //send_motors*=(100-PIDOutputGet(&mainPID))/100;
+
+    if (slip>0.25) alfa=0; else alfa=ALFA;
 
     if (send_motors>=send_motors_min_1+alfa) {
         send_motors=send_motors_min_1+alfa;
@@ -78,10 +83,7 @@ interrupt void main_timer_isr(void) {
     //(98-67)=31 - 100%
     //(voltage_bms-67) - %
 
-
     SoC = (voltage_bms-MIN_VOLTAGE)*100/(MAX_VOLTAGE-MIN_VOLTAGE);
-
-    //send_motors=PedalOut;
 
     if (send_motors<0) send_motors=0;
     if (send_motors>4095) send_motors=4095;
@@ -91,9 +93,11 @@ interrupt void main_timer_isr(void) {
     else
         send_CAN_motors(send_motors*flag, send_motors*flag);
 
-    send_CAN_priborka(voltage_bms,speedf);
+
+    send_CAN_priborka(send_motors,slip*100);
+    //send_CAN_priborka(voltage_bms,speedf);
     send_CAN_steer(SteerOut);
-    send_CAN_datalogger(speedLF,speedRF,speedLR,speedRR);
+    send_CAN_datalogger(slip*100,send_motors,speedf,speedr);
 
 #ifdef FLASH
 	shutdown_detect();
@@ -165,7 +169,7 @@ interrupt void main_timer_isr(void) {
 
 	rtd();
 
-	//PIDInit(&mainPID,1,0,0,0.05,0,50,AUTOMATIC,REVERSE);
+	//PIDInit(&mainPID,10,0,0,0.05,0,100,AUTOMATIC,REVERSE);
     //PIDSetpointSet(&mainPID,0);
 
 	while(1)

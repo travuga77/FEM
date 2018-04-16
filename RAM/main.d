@@ -33,6 +33,7 @@ main.obj: C:/ti/workspace_v7/FEM3/include/DSP2833x_DefaultIsr.h
 main.obj: C:/ti/workspace_v7/FEM3/include/pid_controller.h
 main.obj: C:/ti/ccsv7/tools/compiler/ti-cgt-c2000_16.9.7.LTS/include/stdint.h
 main.obj: C:/ti/ccsv7/tools/compiler/ti-cgt-c2000_16.9.7.LTS/include/stdbool.h
+main.obj: C:/ti/ccsv7/tools/compiler/ti-cgt-c2000_16.9.7.LTS/include/math.h
 
 ../main.c: 
 C:/ti/workspace_v7/FEM3/include/DSP28x_Project.h: 
@@ -67,3 +68,4 @@ C:/ti/workspace_v7/FEM3/include/DSP2833x_DefaultIsr.h:
 C:/ti/workspace_v7/FEM3/include/pid_controller.h: 
 C:/ti/ccsv7/tools/compiler/ti-cgt-c2000_16.9.7.LTS/include/stdint.h: 
 C:/ti/ccsv7/tools/compiler/ti-cgt-c2000_16.9.7.LTS/include/stdbool.h: 
+C:/ti/ccsv7/tools/compiler/ti-cgt-c2000_16.9.7.LTS/include/math.h: 

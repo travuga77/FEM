@@ -31,11 +31,11 @@ ORDERED_OBJS += \
 "./source/DSP2833x_usDelay.obj" \
 "./source/FEM_differential.obj" \
 "./source/FEM_pedal.obj" \
-"./source/FEM_read_CAN.obj" \
 "./source/FEM_safety.obj" \
 "./source/FEM_send_CAN.obj" \
 "./source/FEM_speed.obj" \
 "./source/FEM_steering.obj" \
+"./source/FEM_traction.obj" \
 "../28335_RAM_lnk.cmd" \
 "../DSP2833x_Headers_nonBIOS.cmd" \
 $(GEN_CMDS__FLAG) \
@@ -181,8 +181,8 @@ FEM3.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "main.obj" "pid_controller.obj" "source\DSP2833x_ADC_cal.obj" "source\DSP2833x_Adc.obj" "source\DSP2833x_CodeStartBranch.obj" "source\DSP2833x_CpuTimers.obj" "source\DSP2833x_DefaultIsr.obj" "source\DSP2833x_DisInt.obj" "source\DSP2833x_ECan.obj" "source\DSP2833x_ECap.obj" "source\DSP2833x_GlobalVariableDefs.obj" "source\DSP2833x_Gpio.obj" "source\DSP2833x_MemCopy.obj" "source\DSP2833x_PieCtrl.obj" "source\DSP2833x_PieVect.obj" "source\DSP2833x_Spi.obj" "source\DSP2833x_SysCtrl.obj" "source\DSP2833x_Xintf.obj" "source\DSP2833x_usDelay.obj" "source\FEM_differential.obj" "source\FEM_pedal.obj" "source\FEM_read_CAN.obj" "source\FEM_safety.obj" "source\FEM_send_CAN.obj" "source\FEM_speed.obj" "source\FEM_steering.obj" 
-	-$(RM) "main.d" "pid_controller.d" "source\DSP2833x_Adc.d" "source\DSP2833x_CpuTimers.d" "source\DSP2833x_DefaultIsr.d" "source\DSP2833x_ECan.d" "source\DSP2833x_ECap.d" "source\DSP2833x_GlobalVariableDefs.d" "source\DSP2833x_Gpio.d" "source\DSP2833x_MemCopy.d" "source\DSP2833x_PieCtrl.d" "source\DSP2833x_PieVect.d" "source\DSP2833x_Spi.d" "source\DSP2833x_SysCtrl.d" "source\DSP2833x_Xintf.d" "source\FEM_differential.d" "source\FEM_pedal.d" "source\FEM_read_CAN.d" "source\FEM_safety.d" "source\FEM_send_CAN.d" "source\FEM_speed.d" "source\FEM_steering.d" 
+	-$(RM) "main.obj" "pid_controller.obj" "source\DSP2833x_ADC_cal.obj" "source\DSP2833x_Adc.obj" "source\DSP2833x_CodeStartBranch.obj" "source\DSP2833x_CpuTimers.obj" "source\DSP2833x_DefaultIsr.obj" "source\DSP2833x_DisInt.obj" "source\DSP2833x_ECan.obj" "source\DSP2833x_ECap.obj" "source\DSP2833x_GlobalVariableDefs.obj" "source\DSP2833x_Gpio.obj" "source\DSP2833x_MemCopy.obj" "source\DSP2833x_PieCtrl.obj" "source\DSP2833x_PieVect.obj" "source\DSP2833x_Spi.obj" "source\DSP2833x_SysCtrl.obj" "source\DSP2833x_Xintf.obj" "source\DSP2833x_usDelay.obj" "source\FEM_differential.obj" "source\FEM_pedal.obj" "source\FEM_safety.obj" "source\FEM_send_CAN.obj" "source\FEM_speed.obj" "source\FEM_steering.obj" "source\FEM_traction.obj" 
+	-$(RM) "main.d" "pid_controller.d" "source\DSP2833x_Adc.d" "source\DSP2833x_CpuTimers.d" "source\DSP2833x_DefaultIsr.d" "source\DSP2833x_ECan.d" "source\DSP2833x_ECap.d" "source\DSP2833x_GlobalVariableDefs.d" "source\DSP2833x_Gpio.d" "source\DSP2833x_MemCopy.d" "source\DSP2833x_PieCtrl.d" "source\DSP2833x_PieVect.d" "source\DSP2833x_Spi.d" "source\DSP2833x_SysCtrl.d" "source\DSP2833x_Xintf.d" "source\FEM_differential.d" "source\FEM_pedal.d" "source\FEM_safety.d" "source\FEM_send_CAN.d" "source\FEM_speed.d" "source\FEM_steering.d" "source\FEM_traction.d" 
 	-$(RM) "source\DSP2833x_ADC_cal.d" "source\DSP2833x_CodeStartBranch.d" "source\DSP2833x_DisInt.d" "source\DSP2833x_usDelay.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
