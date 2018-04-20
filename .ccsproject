@@ -11,5 +11,5 @@
 	<createSlaveProjects value=""/>
 	<templateProperties value="id=com.ti.common.project.core.emptyProjectWithMainTemplate,"/>
 	<isTargetManual value="false"/>
-	<origin value="C:/Users/travuga/OneDrive/FEM3"/>
+	<origin value="C:/ti/FEM"/>
 </projectOptions>
