@@ -72,7 +72,7 @@ interrupt void main_timer_isr(void) {
     send_motors=PedalOut;
     //send_motors*=(100-PIDOutputGet(&mainPID))/100;
 
-    if (slip>0.25) alfa=0; else alfa=ALFA;
+    if (slip>0.2) alfa=0; else alfa=ALFA;
 
     if (send_motors>=send_motors_min_1+alfa) {
         send_motors=send_motors_min_1+alfa;

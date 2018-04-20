@@ -1,5 +1,13 @@
 Changelog FEM3
 
+v180416_beta
+
+- beta version of traction system
+- optimisation of project
+- moved to git
+
+
+
 Изменения в v160116:
 - Добавили считывание напряжения с BMS
 
@@ -46,3 +54,4 @@ Changelog FEM3
 - Изменен алгоритм работы педали
 - Изменен способ отправки информации на приборную панель
 - Много других исправлений
+
