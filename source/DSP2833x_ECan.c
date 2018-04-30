@@ -289,7 +289,7 @@ void InitECanb(void)		// Initialize eCAN-B module
 
 /* Write to the MSGID field  */
 
-    ECanbMboxes.MBOX21.MSGID.all = 0;
+    ECanbMboxes.MBOX12.MSGID.all = 0;
     ECanbMboxes.MBOX10.MSGID.all = 0; // Standart Identifier
     ECanbMboxes.MBOX11.MSGID.all = 0; // Standart Identifier
     ECanbMboxes.MBOX15.MSGID.all = 0; // Standart Identifier
@@ -313,7 +313,7 @@ void InitECanb(void)		// Initialize eCAN-B module
 
 
     ECanbMboxes.MBOX28.MSGID.bit.AME=1;
-    ECanbLAMRegs.LAM21.all=0x80000000;
+    ECanbLAMRegs.LAM12.all=0x80000000;
     ECanbLAMRegs.LAM15.all=0x80000000;
     ECanbLAMRegs.LAM16.all=0x80000000;
     ECanbLAMRegs.LAM20.all=0x80000000;
@@ -322,7 +322,7 @@ void InitECanb(void)		// Initialize eCAN-B module
     ECanbLAMRegs.LAM30.all=0x80000000;
     ECanbLAMRegs.LAM31.all=0x80000000;
 
-    ECanbMboxes.MBOX21.MSGID.bit.STDMSGID = 0x121; //from priborka
+    ECanbMboxes.MBOX12.MSGID.bit.STDMSGID = 0x330; //from priborka
     ECanbMboxes.MBOX15.MSGID.bit.STDMSGID = 0x1A2; // left motor info
     ECanbMboxes.MBOX16.MSGID.bit.STDMSGID = 0x1A1; // right motor info
     ECanbMboxes.MBOX20.MSGID.bit.STDMSGID = 0x230; // acc container current
@@ -340,7 +340,7 @@ void InitECanb(void)		// Initialize eCAN-B module
     ECanbShadow.CANMD.bit.MD25 = 0;
     ECanbShadow.CANMD.bit.MD26 = 0;
     ECanbShadow.CANMD.bit.MD27 = 0;
-    ECanbShadow.CANMD.bit.MD21 = 1;
+    ECanbShadow.CANMD.bit.MD12 = 1;
     ECanbShadow.CANMD.bit.MD15 = 1;
     ECanbShadow.CANMD.bit.MD16 = 1;
     ECanbShadow.CANMD.bit.MD20 = 1;
@@ -359,7 +359,7 @@ void InitECanb(void)		// Initialize eCAN-B module
     ECanbShadow.CANME.bit.ME25 = 1;
     ECanbShadow.CANME.bit.ME26 = 1;
     ECanbShadow.CANME.bit.ME27 = 1;
-    ECanbShadow.CANME.bit.ME21 = 1;
+    ECanbShadow.CANME.bit.ME12 = 1;
     ECanbShadow.CANME.bit.ME15 = 1;
     ECanbShadow.CANME.bit.ME16 = 1;
     ECanbShadow.CANME.bit.ME20 = 1;

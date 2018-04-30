@@ -8,7 +8,7 @@
 
 int PedalOut=0;  //main output from pedal
 int send_motors=0;
-int alfa=ALFA; //
+int alfa, alfa_n=ALFA; //
 int mb_temp=0;
 int SteerOut=0;  //main output from steering wheel
 int i=0,t=0;
@@ -27,6 +27,7 @@ extern int flag;
 extern int minspeedr, minspeedf;
 extern int error_code;
 int sw_buttons=0;
+bool button_pressed_once=true;
 
 
 PIDControl mainPID;
@@ -55,7 +56,7 @@ interrupt void main_timer_isr(void) {
 	if (GpioDataRegs.GPADAT.bit.GPIO9==1) GpioDataRegs.GPASET.bit.GPIO5=1; else GpioDataRegs.GPACLEAR.bit.GPIO5=1;
 
 
-	sw_buttons =  ECanbMboxes.MBOX21.MDL.word.LOW_WORD;
+	sw_buttons =  ECanbMboxes.MBOX12.MDL.byte.BYTE3;
     voltage_bms = (ECanbMboxes.MBOX28.MDL.all)*0.0015;
     current_bms = ECanbMboxes.MBOX29.MDL.word.LOW_WORD;
     voltage_left_motor = ECanbMboxes.MBOX15.MDL.word.LOW_WORD/10;
@@ -66,13 +67,28 @@ interrupt void main_timer_isr(void) {
     if (current_acc_cont<0) current_acc_cont=0;
 
 
+
+    if (sw_buttons*button_pressed_once==1) {
+        alfa_n+=5;
+        button_pressed_once=false;
+    }
+
+    if (sw_buttons*button_pressed_once==4) {
+        alfa_n-=5;
+        button_pressed_once=false;
+    }
+
+    if (sw_buttons==0) {
+        button_pressed_once=true;
+    }
+
     slip = (speedr-speedf)/(speedf+0.01);
     //PIDInputSet(&mainPID,slip);
     //PIDCompute(&mainPID);
     send_motors=PedalOut;
     //send_motors*=(100-PIDOutputGet(&mainPID))/100;
 
-    if (slip>0.2) alfa=0; else alfa=ALFA;
+    if (slip>SLIP) alfa=0; else alfa=alfa_n;
 
     if (send_motors>=send_motors_min_1+alfa) {
         send_motors=send_motors_min_1+alfa;
@@ -85,6 +101,7 @@ interrupt void main_timer_isr(void) {
 
     SoC = (voltage_bms-MIN_VOLTAGE)*100/(MAX_VOLTAGE-MIN_VOLTAGE);
 
+
     if (send_motors<0) send_motors=0;
     if (send_motors>4095) send_motors=4095;
 
@@ -94,7 +111,7 @@ interrupt void main_timer_isr(void) {
         send_CAN_motors(send_motors*flag, send_motors*flag);
 
 
-    send_CAN_priborka(send_motors,slip*100);
+    send_CAN_priborka(alfa,slip*100);
     //send_CAN_priborka(voltage_bms,speedf);
     send_CAN_steer(SteerOut);
     send_CAN_datalogger(slip*100,send_motors,speedf,speedr);
