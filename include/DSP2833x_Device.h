@@ -26,8 +26,9 @@
 #define MAX_VOLTAGE 98
 #define MIN_VOLTAGE 67
 
+#define PHASE 1.0
 #define SLIP 0.15
-#define ALFA 150
+#define ALFA 80
 #define DELAY_MS(X) (DELAY_US (X*1000))
 #define Lk 160
 #define dk 114

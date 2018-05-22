@@ -16,7 +16,8 @@ int count;
 int temp1=0, temp2=0;
 int SoC = 0;
 int send_motors_min_1=0;
-float slip=0.0;
+float phase_n=PHASE;
+float slip=0.0, slip_n=SLIP;
 float voltage_left_motor=0.0, voltage_right_motor=0.0;
 float current_left_motor=0.0, current_right_motor=0.0;
 float voltage_bms=0.0;
@@ -28,6 +29,7 @@ extern int minspeedr, minspeedf;
 extern int error_code;
 int sw_buttons=0;
 bool button_pressed_once=true;
+int mode=0;
 
 
 PIDControl mainPID;
@@ -69,12 +71,22 @@ interrupt void main_timer_isr(void) {
 
 
     if (sw_buttons*button_pressed_once==1) {
-        alfa_n+=5;
+        if (mode==0)    alfa_n+=5;
+        if (mode==1)    slip_n+=0.01;
+        if (mode==2)    phase_n+=0.01;
+        button_pressed_once=false;
+    }
+
+    if (sw_buttons*button_pressed_once==8) {
+        mode+=1;
+        if (mode>2) mode=0;
         button_pressed_once=false;
     }
 
     if (sw_buttons*button_pressed_once==4) {
-        alfa_n-=5;
+        if (mode==0)    alfa_n-=5;
+        if (mode==1)    slip_n-=0.01;
+        if (mode==2)    phase_n-=0.01;
         button_pressed_once=false;
     }
 
@@ -88,7 +100,11 @@ interrupt void main_timer_isr(void) {
     send_motors=PedalOut;
     //send_motors*=(100-PIDOutputGet(&mainPID))/100;
 
-    if (slip>SLIP) alfa=0; else alfa=alfa_n;
+    //if (slip>SLIP) alfa=0; else alfa=alfa_n;
+    if (slip<slip_n*phase_n && slip>0) alfa=alfa_n*cos(slip*1.5708/slip_n);
+    if (slip>=slip_n*phase_n) alfa=alfa_n*cos(1.5708*phase_n);
+    if (slip<=0)    alfa=alfa_n;
+
 
     if (send_motors>=send_motors_min_1+alfa) {
         send_motors=send_motors_min_1+alfa;
@@ -110,8 +126,9 @@ interrupt void main_timer_isr(void) {
     else
         send_CAN_motors(send_motors*flag, send_motors*flag);
 
-
-    send_CAN_priborka(alfa,slip*100);
+    if (mode==0)    send_CAN_priborka(alfa,speedf);
+    if (mode==1)    send_CAN_priborka(slip_n*100,speedf);
+    if (mode==2)    send_CAN_priborka(phase_n*100,speedf);
     //send_CAN_priborka(voltage_bms,speedf);
     send_CAN_steer(SteerOut);
     send_CAN_datalogger(slip*100,send_motors,speedf,speedr);
