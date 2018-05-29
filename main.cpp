@@ -103,7 +103,7 @@ interrupt void main_timer_isr(void) {
     //if (slip>SLIP) alfa=0; else alfa=alfa_n;
     if (slip<slip_n*phase_n && slip>0) alfa=alfa_n*cos(slip*1.5708/slip_n);
     if (slip>=slip_n*phase_n) alfa=alfa_n*cos(1.5708*phase_n);
-    if (slip<=0)    alfa=alfa_n;
+    if (slip<=0 or slip_n<=3)    alfa=alfa_n;
 
 
     if (send_motors>=send_motors_min_1+alfa) {
