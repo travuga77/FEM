@@ -29,6 +29,8 @@ extern int minspeedr, minspeedf;
 extern int error_code;
 int sw_buttons=0;
 bool button_pressed_once=true;
+bool racelogic=false;
+int racelogic_count=0;
 int mode=0;
 
 
@@ -46,6 +48,18 @@ interrupt void cpu_timer0_isr(void)
 
 interrupt void main_timer_isr(void) {
 	calc_speed();
+
+
+    if (speedf<0.1) {
+        racelogic=true;
+        racelogic_count=0;
+    } else {
+        if (racelogic and speedf<50)
+            racelogic_count+=5;
+        else {
+            racelogic=false;
+        }
+    }
 
 	calc_PedalOut();
 
@@ -67,6 +81,7 @@ interrupt void main_timer_isr(void) {
     current_right_motor = ECanbMboxes.MBOX16.MDL.word.HI_WORD/10;
     current_acc_cont = ECanbMboxes.MBOX20.MDL.word.LOW_WORD/10;
     if (current_acc_cont<0) current_acc_cont=0;
+
 
 
 
@@ -103,13 +118,16 @@ interrupt void main_timer_isr(void) {
     //if (slip>SLIP) alfa=0; else alfa=alfa_n;
     if (slip<slip_n*phase_n && slip>0) alfa=alfa_n*cos(slip*1.5708/slip_n);
     if (slip>=slip_n*phase_n) alfa=alfa_n*cos(1.5708*phase_n);
-    if (slip<=0 or slip_n<=3)    alfa=alfa_n;
+    if (slip<=0 or slip_n<=0.03)    alfa=alfa_n;
 
 
     if (send_motors>=send_motors_min_1+alfa) {
         send_motors=send_motors_min_1+alfa;
     }
     send_motors_min_1=send_motors;
+
+
+
 
 
     //(98-67)=31 - 100%
@@ -126,9 +144,9 @@ interrupt void main_timer_isr(void) {
     else
         send_CAN_motors(send_motors*flag, send_motors*flag);
 
-    if (mode==0)    send_CAN_priborka(alfa,speedf);
-    if (mode==1)    send_CAN_priborka(slip_n*100,speedf);
-    if (mode==2)    send_CAN_priborka(phase_n*100,speedf);
+    if (mode==0)    send_CAN_priborka(alfa,racelogic_count);
+    if (mode==1)    send_CAN_priborka(slip_n*100,racelogic_count);
+    if (mode==2)    send_CAN_priborka(phase_n*100,racelogic_count);
     //send_CAN_priborka(voltage_bms,speedf);
     send_CAN_steer(SteerOut);
     send_CAN_datalogger(slip*100,send_motors,speedf,speedr);
@@ -138,7 +156,7 @@ interrupt void main_timer_isr(void) {
 #endif
 }
 
- void main(void){
+void main(void){
 // Initialize System Control: PLL, WatchDog, enable Peripheral Clocks
     InitSysCtrl();
 
