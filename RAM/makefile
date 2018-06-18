@@ -4,7 +4,7 @@
 
 SHELL = cmd.exe
 
-CG_TOOL_ROOT := C:/ti/ccsv7/tools/compiler/ti-cgt-c2000_16.9.7.LTS
+CG_TOOL_ROOT := C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS
 
 GEN_OPTS__FLAG := 
 GEN_CMDS__FLAG := 
@@ -167,14 +167,14 @@ all: FEM3.out
 FEM3.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: C2000 Linker'
-	"C:/ti/ccsv7/tools/compiler/ti-cgt-c2000_16.9.7.LTS/bin/cl2000" -v28 -ml -mt --float_support=fpu32 -O2 --opt_for_speed=2 --advice:performance=all --define=_INLINE --define=RAM -g --diag_warning=225 --diag_wrap=off --display_error_number -z -m"FEM3.map" --heap_size=0x400 --stack_size=0x400 --warn_sections -i"C:/ti/ccsv7/tools/compiler/ti-cgt-c2000_16.9.7.LTS/lib" -i"C:/ti/ccsv7/tools/compiler/ti-cgt-c2000_16.9.7.LTS/include" --reread_libs --diag_wrap=off --display_error_number --xml_link_info="FEM3_linkInfo.xml" --rom_model -o "FEM3.out" $(ORDERED_OBJS)
+	"C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/bin/cl2000" -v28 -ml -mt --float_support=fpu32 -O2 --opt_for_speed=2 --advice:performance=all --define=_INLINE --define=RAM -g --diag_warning=225 --diag_wrap=off --display_error_number -z -m"FEM3.map" --heap_size=0x400 --stack_size=0x400 --warn_sections -i"C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/lib" -i"C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/include" --reread_libs --diag_wrap=off --display_error_number --xml_link_info="FEM3_linkInfo.xml" --rom_model -o "FEM3.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
 FEM3.hex: $(EXE_OUTPUTS)
 	@echo 'Building files: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo 'Invoking: C2000 Hex Utility'
-	"C:/ti/ccsv7/tools/compiler/ti-cgt-c2000_16.9.7.LTS/bin/hex2000"  -o "FEM3.hex" $(EXE_OUTPUTS__QUOTED)
+	"C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/bin/hex2000"  -o "FEM3.hex" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo ' '
 
@@ -182,8 +182,8 @@ FEM3.hex: $(EXE_OUTPUTS)
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
 	-$(RM) "main.obj" "pid_controller.obj" "source\DSP2833x_ADC_cal.obj" "source\DSP2833x_Adc.obj" "source\DSP2833x_CodeStartBranch.obj" "source\DSP2833x_CpuTimers.obj" "source\DSP2833x_DefaultIsr.obj" "source\DSP2833x_DisInt.obj" "source\DSP2833x_ECan.obj" "source\DSP2833x_ECap.obj" "source\DSP2833x_GlobalVariableDefs.obj" "source\DSP2833x_Gpio.obj" "source\DSP2833x_MemCopy.obj" "source\DSP2833x_PieCtrl.obj" "source\DSP2833x_PieVect.obj" "source\DSP2833x_Spi.obj" "source\DSP2833x_SysCtrl.obj" "source\DSP2833x_Xintf.obj" "source\DSP2833x_usDelay.obj" "source\FEM_differential.obj" "source\FEM_pedal.obj" "source\FEM_safety.obj" "source\FEM_send_CAN.obj" "source\FEM_speed.obj" "source\FEM_steering.obj" "source\FEM_traction.obj" 
-	-$(RM) "pid_controller.d" "source\DSP2833x_Adc.d" "source\DSP2833x_CpuTimers.d" "source\DSP2833x_DefaultIsr.d" "source\DSP2833x_ECan.d" "source\DSP2833x_ECap.d" "source\DSP2833x_GlobalVariableDefs.d" "source\DSP2833x_Gpio.d" "source\DSP2833x_MemCopy.d" "source\DSP2833x_PieCtrl.d" "source\DSP2833x_PieVect.d" "source\DSP2833x_Spi.d" "source\DSP2833x_SysCtrl.d" "source\DSP2833x_Xintf.d" "source\FEM_differential.d" "source\FEM_pedal.d" "source\FEM_safety.d" "source\FEM_send_CAN.d" "source\FEM_speed.d" "source\FEM_steering.d" "source\FEM_traction.d" 
-	-$(RM) "main.d" 
+	-$(RM) "pid_controller.d" "source\DSP2833x_Adc.d" "source\DSP2833x_CpuTimers.d" "source\DSP2833x_DefaultIsr.d" "source\DSP2833x_ECan.d" "source\DSP2833x_ECap.d" "source\DSP2833x_GlobalVariableDefs.d" "source\DSP2833x_Gpio.d" "source\DSP2833x_MemCopy.d" "source\DSP2833x_PieCtrl.d" "source\DSP2833x_PieVect.d" "source\DSP2833x_Spi.d" "source\DSP2833x_SysCtrl.d" "source\DSP2833x_Xintf.d" "source\FEM_differential.d" "source\FEM_pedal.d" "source\FEM_safety.d" "source\FEM_send_CAN.d" "source\FEM_speed.d" "source\FEM_traction.d" 
+	-$(RM) "main.d" "source\FEM_steering.d" 
 	-$(RM) "source\DSP2833x_ADC_cal.d" "source\DSP2833x_CodeStartBranch.d" "source\DSP2833x_DisInt.d" "source\DSP2833x_usDelay.d" 
 	-@echo 'Finished clean'
 	-@echo ' '

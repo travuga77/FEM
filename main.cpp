@@ -14,7 +14,6 @@ int SteerOut=0;  //main output from steering wheel
 int i=0,t=0;
 int count;
 int temp1=0, temp2=0;
-int SoC = 0;
 int send_motors_min_1=0;
 float phase_n=PHASE;
 float slip=0.0, slip_n=SLIP;
@@ -27,11 +26,9 @@ extern float speed, speedr, speedf, speedLF, speedRF, speedLR, speedRR;
 extern int flag;
 extern int minspeedr, minspeedf;
 extern int error_code;
-int sw_buttons=0;
-bool button_pressed_once=true;
 bool racelogic=false;
 int racelogic_count=0;
-int mode=0;
+extern int mode;
 
 
 PIDControl mainPID;
@@ -72,7 +69,7 @@ interrupt void main_timer_isr(void) {
 	if (GpioDataRegs.GPADAT.bit.GPIO9==1) GpioDataRegs.GPASET.bit.GPIO5=1; else GpioDataRegs.GPACLEAR.bit.GPIO5=1;
 
 
-	sw_buttons =  ECanbMboxes.MBOX12.MDL.byte.BYTE3;
+
     voltage_bms = (ECanbMboxes.MBOX28.MDL.all)*0.0015;
     current_bms = ECanbMboxes.MBOX29.MDL.word.LOW_WORD;
     voltage_left_motor = ECanbMboxes.MBOX15.MDL.word.LOW_WORD/10;
@@ -82,32 +79,7 @@ interrupt void main_timer_isr(void) {
     current_acc_cont = ECanbMboxes.MBOX20.MDL.word.LOW_WORD/10;
     if (current_acc_cont<0) current_acc_cont=0;
 
-
-
-
-    if (sw_buttons*button_pressed_once==1) {
-        if (mode==0)    alfa_n+=5;
-        if (mode==1)    slip_n+=0.01;
-        if (mode==2)    phase_n+=0.01;
-        button_pressed_once=false;
-    }
-
-    if (sw_buttons*button_pressed_once==8) {
-        mode+=1;
-        if (mode>2) mode=0;
-        button_pressed_once=false;
-    }
-
-    if (sw_buttons*button_pressed_once==4) {
-        if (mode==0)    alfa_n-=5;
-        if (mode==1)    slip_n-=0.01;
-        if (mode==2)    phase_n-=0.01;
-        button_pressed_once=false;
-    }
-
-    if (sw_buttons==0) {
-        button_pressed_once=true;
-    }
+    steering_buttons();
 
     slip = (speedr-speedf)/(speedf+0.01);
     //PIDInputSet(&mainPID,slip);
@@ -126,14 +98,8 @@ interrupt void main_timer_isr(void) {
     }
     send_motors_min_1=send_motors;
 
-
-
-
-
     //(98-67)=31 - 100%
     //(voltage_bms-67) - %
-
-    SoC = (voltage_bms-MIN_VOLTAGE)*100/(MAX_VOLTAGE-MIN_VOLTAGE);
 
 
     if (send_motors<0) send_motors=0;
@@ -149,7 +115,7 @@ interrupt void main_timer_isr(void) {
     if (mode==2)    send_CAN_priborka(phase_n*100,racelogic_count);
     //send_CAN_priborka(voltage_bms,speedf);
     send_CAN_steer(SteerOut);
-    send_CAN_datalogger(slip*100,send_motors,speedf,speedr);
+    send_CAN_datalogger(slip*100,send_motors,speedf,speedr,0,0,0,0);
 
 #ifdef FLASH
 	shutdown_detect();

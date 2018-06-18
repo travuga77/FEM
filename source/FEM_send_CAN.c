@@ -44,7 +44,7 @@ void send_CAN_priborka (int left, int right) {
         ECanbRegs.CANTA.all = ECanbShadow.CANTA.all;
 }
 
-void send_CAN_datalogger (int tr0, int tr1, int tr2, int tr3) {
+void send_CAN_datalogger (int tr0, int tr1, int tr2, int tr3, int tr4, int tr5, int tr6, int tr7) {
 
     volatile struct ECAN_REGS ECanbShadow;
 
@@ -52,6 +52,10 @@ void send_CAN_datalogger (int tr0, int tr1, int tr2, int tr3) {
     ECanbMboxes.MBOX10.MDL.word.HI_WORD=tr1;   //TEST AREA
     ECanbMboxes.MBOX10.MDH.word.LOW_WORD=tr2;   //TEST AREA
     ECanbMboxes.MBOX10.MDH.word.HI_WORD=tr3;   //TEST AREA
+    ECanbMboxes.MBOX11.MDL.word.LOW_WORD=tr4;   //TEST AREA
+    ECanbMboxes.MBOX11.MDL.word.HI_WORD=tr5;   //TEST AREA
+    ECanbMboxes.MBOX11.MDH.word.LOW_WORD=tr6;   //TEST AREA
+    ECanbMboxes.MBOX11.MDH.word.HI_WORD=tr7;   //TEST AREA
 
     ECanbShadow.CANTRS.all = 0;
         ECanbShadow.CANTRS.bit.TRS10 = 1;
@@ -62,6 +66,16 @@ void send_CAN_datalogger (int tr0, int tr1, int tr2, int tr3) {
     } while (ECanbShadow.CANTA.bit.TA10 == 0);              // Wait for TA10 bit to be set...
     ECanbShadow.CANTA.all = 0;
         ECanbShadow.CANTA.bit.TA10 = 1;                     // Clear TA10
+        ECanbRegs.CANTA.all = ECanbShadow.CANTA.all;
+    ECanbShadow.CANTRS.all = 0;
+        ECanbShadow.CANTRS.bit.TRS11 = 1;
+        ECanbRegs.CANTRS.all = ECanbShadow.CANTRS.all;
+    do
+    {
+        ECanbShadow.CANTA.all = ECanbRegs.CANTA.all;
+    } while (ECanbShadow.CANTA.bit.TA11 == 0);              // Wait for TA10 bit to be set...
+    ECanbShadow.CANTA.all = 0;
+        ECanbShadow.CANTA.bit.TA11 = 1;                     // Clear TA10
         ECanbRegs.CANTA.all = ECanbShadow.CANTA.all;
 }
 

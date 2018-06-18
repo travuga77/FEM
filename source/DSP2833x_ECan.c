@@ -305,6 +305,7 @@ void InitECanb(void)		// Initialize eCAN-B module
     ECanbMboxes.MBOX31.MSGID.all = 0; // Standart Identifier
 
     ECanbMboxes.MBOX10.MSGID.bit.STDMSGID = 0x136; // Standart Identifier datalogger
+    ECanbMboxes.MBOX11.MSGID.bit.STDMSGID = 0x137; // Standart Identifier datalogger
     ECanbMboxes.MBOX24.MSGID.bit.STDMSGID = 0x400; // Standart Identifier steering
     ECanbMboxes.MBOX25.MSGID.bit.STDMSGID = 0x222; // Standart Identifier motor left
     ECanbMboxes.MBOX26.MSGID.bit.STDMSGID = 0x221; // Standart Identifier motor right
@@ -382,7 +383,7 @@ void InitECanb(void)		// Initialize eCAN-B module
 /* Write to DLC field in Master Control reg */
 
     ECanbMboxes.MBOX10.MSGCTRL.bit.DLC = 8; //transmit only
-    ECanbMboxes.MBOX11.MSGCTRL.bit.DLC = 1;
+    ECanbMboxes.MBOX11.MSGCTRL.bit.DLC = 8;
     ECanbMboxes.MBOX24.MSGCTRL.bit.DLC = 1;
     ECanbMboxes.MBOX25.MSGCTRL.bit.DLC = 2;
     ECanbMboxes.MBOX26.MSGCTRL.bit.DLC = 2;

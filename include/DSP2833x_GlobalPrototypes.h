@@ -39,11 +39,12 @@ extern void calc_PedalOut(void);
 extern void shutdown_detect(void);
 extern void stop_light(void);
 extern int calc_steer_wheel_spi(void);
+extern void steering_buttons(void);
 extern void correct_alfa(void);
 extern void send_CAN_motors (int a, int b);
 extern void send_CAN_steer (int c);
 extern void send_CAN_priborka (int left, int right);
-extern void send_CAN_datalogger (int tr0, int tr1, int tr2, int tr3);
+extern void send_CAN_datalogger (int tr0, int tr1, int tr2, int tr3, int tr4, int tr5, int tr6, int tr7);
 extern void send_CAN_motors (int a, int b);
 extern void send_CAN_sync_message(void);
 //##################################################################
