@@ -5,6 +5,9 @@
 SHELL = cmd.exe
 
 # Add inputs and outputs from these tool invocations to the build variables 
+CPP_SRCS += \
+../source/FEM_steering.cpp 
+
 ASM_SRCS += \
 ../source/DSP2833x_ADC_cal.asm \
 ../source/DSP2833x_CodeStartBranch.asm \
@@ -30,7 +33,6 @@ C_SRCS += \
 ../source/FEM_safety.c \
 ../source/FEM_send_CAN.c \
 ../source/FEM_speed.c \
-../source/FEM_steering.c \
 ../source/FEM_traction.c 
 
 C_DEPS += \
@@ -52,7 +54,6 @@ C_DEPS += \
 ./source/FEM_safety.d \
 ./source/FEM_send_CAN.d \
 ./source/FEM_speed.d \
-./source/FEM_steering.d \
 ./source/FEM_traction.d 
 
 OBJS += \
@@ -86,6 +87,9 @@ ASM_DEPS += \
 ./source/DSP2833x_CodeStartBranch.d \
 ./source/DSP2833x_DisInt.d \
 ./source/DSP2833x_usDelay.d 
+
+CPP_DEPS += \
+./source/FEM_steering.d 
 
 OBJS__QUOTED += \
 "source\DSP2833x_ADC_cal.obj" \
@@ -132,8 +136,10 @@ C_DEPS__QUOTED += \
 "source\FEM_safety.d" \
 "source\FEM_send_CAN.d" \
 "source\FEM_speed.d" \
-"source\FEM_steering.d" \
 "source\FEM_traction.d" 
+
+CPP_DEPS__QUOTED += \
+"source\FEM_steering.d" 
 
 ASM_DEPS__QUOTED += \
 "source\DSP2833x_ADC_cal.d" \
@@ -166,7 +172,9 @@ C_SRCS__QUOTED += \
 "../source/FEM_safety.c" \
 "../source/FEM_send_CAN.c" \
 "../source/FEM_speed.c" \
-"../source/FEM_steering.c" \
 "../source/FEM_traction.c" 
+
+CPP_SRCS__QUOTED += \
+"../source/FEM_steering.cpp" 
 
 

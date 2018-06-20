@@ -289,6 +289,7 @@ void InitECanb(void)		// Initialize eCAN-B module
 
 /* Write to the MSGID field  */
 
+    ECanbMboxes.MBOX1.MSGID.all = 0;
     ECanbMboxes.MBOX12.MSGID.all = 0;
     ECanbMboxes.MBOX10.MSGID.all = 0; // Standart Identifier
     ECanbMboxes.MBOX11.MSGID.all = 0; // Standart Identifier
@@ -310,7 +311,7 @@ void InitECanb(void)		// Initialize eCAN-B module
     ECanbMboxes.MBOX25.MSGID.bit.STDMSGID = 0x222; // Standart Identifier motor left
     ECanbMboxes.MBOX26.MSGID.bit.STDMSGID = 0x221; // Standart Identifier motor right
     ECanbMboxes.MBOX27.MSGID.bit.STDMSGID = 0x120; // Standart Identifier dashboard
-    ECanbMboxes.MBOX11.MSGID.bit.STDMSGID = 0x80;  // sync mes
+    ECanbMboxes.MBOX1.MSGID.bit.STDMSGID = 0x80;  // sync mes
 
 
     ECanbMboxes.MBOX28.MSGID.bit.AME=1;
@@ -335,6 +336,7 @@ void InitECanb(void)		// Initialize eCAN-B module
 /* Configure Mailbox under test as a Transmit mailbox */
 
     ECanbShadow.CANMD.all = ECanbRegs.CANMD.all;
+    ECanbShadow.CANMD.bit.MD1 = 0;
     ECanbShadow.CANMD.bit.MD10 = 0;
     ECanbShadow.CANMD.bit.MD11 = 0;
     ECanbShadow.CANMD.bit.MD24 = 0;
@@ -354,6 +356,7 @@ void InitECanb(void)		// Initialize eCAN-B module
 /* Enable Mailbox under test */
 
     ECanbShadow.CANME.all = ECanbRegs.CANME.all;
+    ECanbShadow.CANME.bit.ME1 = 1;
     ECanbShadow.CANME.bit.ME10 = 1;
     ECanbShadow.CANME.bit.ME11 = 1;
     ECanbShadow.CANME.bit.ME24 = 1;
@@ -382,6 +385,7 @@ void InitECanb(void)		// Initialize eCAN-B module
 
 /* Write to DLC field in Master Control reg */
 
+    ECanbMboxes.MBOX1.MSGCTRL.bit.DLC = 1;
     ECanbMboxes.MBOX10.MSGCTRL.bit.DLC = 8; //transmit only
     ECanbMboxes.MBOX11.MSGCTRL.bit.DLC = 8;
     ECanbMboxes.MBOX24.MSGCTRL.bit.DLC = 1;
@@ -391,6 +395,7 @@ void InitECanb(void)		// Initialize eCAN-B module
 
 /* Write to the mailbox RAM field */
 
+    ECanbMboxes.MBOX1.MDL.all = 0x0;
     ECanbMboxes.MBOX10.MDL.all = 0x0;
     ECanbMboxes.MBOX11.MDL.all = 0x0;
     ECanbMboxes.MBOX24.MDL.all = 0x0;

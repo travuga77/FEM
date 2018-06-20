@@ -115,7 +115,7 @@ interrupt void main_timer_isr(void) {
     if (mode==2)    send_CAN_priborka(phase_n*100,racelogic_count);
     //send_CAN_priborka(voltage_bms,speedf);
     send_CAN_steer(SteerOut);
-    send_CAN_datalogger(slip*100,send_motors,speedf,speedr,0,0,0,0);
+    send_CAN_datalogger(slip*100,send_motors,speedf,speedr,voltage_bms,current_bms,current_left_motor,current_right_motor);
 
 #ifdef FLASH
 	shutdown_detect();

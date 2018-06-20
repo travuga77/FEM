@@ -22,10 +22,10 @@ source/DSP2833x_SysCtrl.obj: C:/ti/FEM/include/DSP2833x_XIntrupt.h
 source/DSP2833x_SysCtrl.obj: C:/ti/FEM/include/DSP2833x_Xintf.h
 source/DSP2833x_SysCtrl.obj: C:/ti/FEM/include/DSP2833x_Examples.h
 source/DSP2833x_SysCtrl.obj: C:/ti/FEM/include/DSP2833x_GlobalPrototypes.h
-source/DSP2833x_SysCtrl.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/include/math.h
-source/DSP2833x_SysCtrl.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/include/_ti_config.h
-source/DSP2833x_SysCtrl.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/include/linkage.h
-source/DSP2833x_SysCtrl.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/include/_defs.h
+source/DSP2833x_SysCtrl.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.2.LTS/include/math.h
+source/DSP2833x_SysCtrl.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.2.LTS/include/_ti_config.h
+source/DSP2833x_SysCtrl.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.2.LTS/include/linkage.h
+source/DSP2833x_SysCtrl.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.2.LTS/include/_defs.h
 source/DSP2833x_SysCtrl.obj: C:/ti/FEM/include/DSP2833x_EPwm_defines.h
 source/DSP2833x_SysCtrl.obj: C:/ti/FEM/include/DSP2833x_Dma_defines.h
 source/DSP2833x_SysCtrl.obj: C:/ti/FEM/include/DSP2833x_I2c_defines.h
@@ -53,10 +53,10 @@ C:/ti/FEM/include/DSP2833x_XIntrupt.h:
 C:/ti/FEM/include/DSP2833x_Xintf.h: 
 C:/ti/FEM/include/DSP2833x_Examples.h: 
 C:/ti/FEM/include/DSP2833x_GlobalPrototypes.h: 
-C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/include/math.h: 
-C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/include/_ti_config.h: 
-C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/include/linkage.h: 
-C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/include/_defs.h: 
+C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.2.LTS/include/math.h: 
+C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.2.LTS/include/_ti_config.h: 
+C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.2.LTS/include/linkage.h: 
+C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.2.LTS/include/_defs.h: 
 C:/ti/FEM/include/DSP2833x_EPwm_defines.h: 
 C:/ti/FEM/include/DSP2833x_Dma_defines.h: 
 C:/ti/FEM/include/DSP2833x_I2c_defines.h: 

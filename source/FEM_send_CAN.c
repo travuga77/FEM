@@ -44,7 +44,7 @@ void send_CAN_priborka (int left, int right) {
         ECanbRegs.CANTA.all = ECanbShadow.CANTA.all;
 }
 
-void send_CAN_datalogger (int tr0, int tr1, int tr2, int tr3, int tr4, int tr5, int tr6, int tr7) {
+void send_CAN_datalogger (int tr7, int tr6, int tr5, int tr4, int tr3, int tr2, int tr1, int tr0) {
 
     volatile struct ECAN_REGS ECanbShadow;
 
@@ -67,6 +67,7 @@ void send_CAN_datalogger (int tr0, int tr1, int tr2, int tr3, int tr4, int tr5, 
     ECanbShadow.CANTA.all = 0;
         ECanbShadow.CANTA.bit.TA10 = 1;                     // Clear TA10
         ECanbRegs.CANTA.all = ECanbShadow.CANTA.all;
+
     ECanbShadow.CANTRS.all = 0;
         ECanbShadow.CANTRS.bit.TRS11 = 1;
         ECanbRegs.CANTRS.all = ECanbShadow.CANTRS.all;
@@ -133,14 +134,14 @@ void send_CAN_sync_message(void){
     volatile struct ECAN_REGS ECanbShadow;
 
     ECanbShadow.CANTRS.all = 0;
-        ECanbShadow.CANTRS.bit.TRS11 = 1;
+        ECanbShadow.CANTRS.bit.TRS1 = 1;
         ECanbRegs.CANTRS.all = ECanbShadow.CANTRS.all;
     do
     {
         ECanbShadow.CANTA.all = ECanbRegs.CANTA.all;
-    } while (ECanbShadow.CANTA.bit.TA11 == 0);              // Wait for TA11 bit to be set...
+    } while (ECanbShadow.CANTA.bit.TA1 == 0);              // Wait for TA11 bit to be set...
     ECanbShadow.CANTA.all = 0;
-        ECanbShadow.CANTA.bit.TA11 = 1;                     // Clear TA11
+        ECanbShadow.CANTA.bit.TA1 = 1;                     // Clear TA11
         ECanbRegs.CANTA.all = ECanbShadow.CANTA.all;
 
 }
