@@ -290,9 +290,11 @@ void InitECanb(void)		// Initialize eCAN-B module
 /* Write to the MSGID field  */
 
     ECanbMboxes.MBOX1.MSGID.all = 0;
-    ECanbMboxes.MBOX12.MSGID.all = 0;
+    ECanbMboxes.MBOX8.MSGID.all = 0;
+    ECanbMboxes.MBOX9.MSGID.all = 0;
     ECanbMboxes.MBOX10.MSGID.all = 0; // Standart Identifier
     ECanbMboxes.MBOX11.MSGID.all = 0; // Standart Identifier
+    ECanbMboxes.MBOX12.MSGID.all = 0;
     ECanbMboxes.MBOX15.MSGID.all = 0; // Standart Identifier
     ECanbMboxes.MBOX16.MSGID.all = 0; // Standart Identifier
     ECanbMboxes.MBOX20.MSGID.all = 0; // Standart Identifier
@@ -305,6 +307,8 @@ void InitECanb(void)		// Initialize eCAN-B module
     ECanbMboxes.MBOX30.MSGID.all = 0; // Standart Identifier
     ECanbMboxes.MBOX31.MSGID.all = 0; // Standart Identifier
 
+    ECanbMboxes.MBOX8.MSGID.bit.STDMSGID = 0x134; // Standart Identifier datalogger
+    ECanbMboxes.MBOX9.MSGID.bit.STDMSGID = 0x135; // Standart Identifier datalogger
     ECanbMboxes.MBOX10.MSGID.bit.STDMSGID = 0x136; // Standart Identifier datalogger
     ECanbMboxes.MBOX11.MSGID.bit.STDMSGID = 0x137; // Standart Identifier datalogger
     ECanbMboxes.MBOX24.MSGID.bit.STDMSGID = 0x400; // Standart Identifier steering
@@ -337,6 +341,8 @@ void InitECanb(void)		// Initialize eCAN-B module
 
     ECanbShadow.CANMD.all = ECanbRegs.CANMD.all;
     ECanbShadow.CANMD.bit.MD1 = 0;
+    ECanbShadow.CANMD.bit.MD8 = 0;
+    ECanbShadow.CANMD.bit.MD9 = 0;
     ECanbShadow.CANMD.bit.MD10 = 0;
     ECanbShadow.CANMD.bit.MD11 = 0;
     ECanbShadow.CANMD.bit.MD24 = 0;
@@ -357,6 +363,8 @@ void InitECanb(void)		// Initialize eCAN-B module
 
     ECanbShadow.CANME.all = ECanbRegs.CANME.all;
     ECanbShadow.CANME.bit.ME1 = 1;
+    ECanbShadow.CANME.bit.ME8 = 1;
+    ECanbShadow.CANME.bit.ME9 = 1;
     ECanbShadow.CANME.bit.ME10 = 1;
     ECanbShadow.CANME.bit.ME11 = 1;
     ECanbShadow.CANME.bit.ME24 = 1;
@@ -386,6 +394,8 @@ void InitECanb(void)		// Initialize eCAN-B module
 /* Write to DLC field in Master Control reg */
 
     ECanbMboxes.MBOX1.MSGCTRL.bit.DLC = 1;
+    ECanbMboxes.MBOX8.MSGCTRL.bit.DLC = 8;
+    ECanbMboxes.MBOX9.MSGCTRL.bit.DLC = 8;
     ECanbMboxes.MBOX10.MSGCTRL.bit.DLC = 8; //transmit only
     ECanbMboxes.MBOX11.MSGCTRL.bit.DLC = 8;
     ECanbMboxes.MBOX24.MSGCTRL.bit.DLC = 1;
@@ -396,6 +406,8 @@ void InitECanb(void)		// Initialize eCAN-B module
 /* Write to the mailbox RAM field */
 
     ECanbMboxes.MBOX1.MDL.all = 0x0;
+    ECanbMboxes.MBOX8.MDL.all = 0x0;
+    ECanbMboxes.MBOX9.MDL.all = 0x0;
     ECanbMboxes.MBOX10.MDL.all = 0x0;
     ECanbMboxes.MBOX11.MDL.all = 0x0;
     ECanbMboxes.MBOX24.MDL.all = 0x0;

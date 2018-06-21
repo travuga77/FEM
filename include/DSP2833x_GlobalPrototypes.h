@@ -44,7 +44,7 @@ extern void correct_alfa(void);
 extern void send_CAN_motors (int a, int b);
 extern void send_CAN_steer (int c);
 extern void send_CAN_priborka (int left, int right);
-extern void send_CAN_datalogger (int tr0, int tr1, int tr2, int tr3, int tr4, int tr5, int tr6, int tr7);
+extern void send_CAN_datalogger (int tr15, int tr14, int tr13, int tr12, int tr11, int tr10, int tr9, int tr8, int tr7, int tr6, int tr5, int tr4, int tr3, int tr2, int tr1, int tr0);
 extern void send_CAN_motors (int a, int b);
 extern void send_CAN_sync_message(void);
 //##################################################################

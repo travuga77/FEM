@@ -76,7 +76,7 @@ interrupt void main_timer_isr(void) {
     voltage_right_motor = ECanbMboxes.MBOX16.MDL.word.LOW_WORD/10;
     current_left_motor = ECanbMboxes.MBOX15.MDL.word.HI_WORD/10;
     current_right_motor = ECanbMboxes.MBOX16.MDL.word.HI_WORD/10;
-    current_acc_cont = ECanbMboxes.MBOX20.MDL.word.LOW_WORD/10;
+    current_acc_cont = 0.78125*ECanbMboxes.MBOX20.MDL.word.LOW_WORD-400;
     if (current_acc_cont<0) current_acc_cont=0;
 
     steering_buttons();
@@ -115,7 +115,7 @@ interrupt void main_timer_isr(void) {
     if (mode==2)    send_CAN_priborka(phase_n*100,racelogic_count);
     //send_CAN_priborka(voltage_bms,speedf);
     send_CAN_steer(SteerOut);
-    send_CAN_datalogger(slip*100,send_motors,speedf,speedr,voltage_bms,current_bms,current_left_motor,current_right_motor);
+    send_CAN_datalogger(slip*100,send_motors,speedf,speedr,0,voltage_bms,current_bms,current_acc_cont,0,0,voltage_left_motor,current_left_motor,0,0,voltage_right_motor,current_right_motor);
 
 #ifdef FLASH
 	shutdown_detect();
