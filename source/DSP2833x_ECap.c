@@ -61,7 +61,7 @@ InitECap(void)
     ECap2Regs.ECEINT.bit.CEVT4 = 1;            // 4 events = interrupt
 
 
-    ECap3Regs.ECEINT.all = 0x0000;             // Disable all capture interrupts
+    ECap3Regs.ECEINT.bit.CEVT1 = 1;             // Enable event 1 capture interrupt
     ECap3Regs.ECCLR.all = 0xFFFF;              // Clear all CAP interrupt flags
     ECap3Regs.ECCTL1.bit.CAPLDEN = 0;          // Disable CAP1-CAP4 register loads
     ECap3Regs.ECCTL2.bit.TSCTRSTOP = 0;        // Make sure the counter is stopped
@@ -78,7 +78,7 @@ InitECap(void)
     ECap3Regs.ECEINT.bit.CEVT4 = 1;            // 4 events = interrupt
 
 
-    ECap4Regs.ECEINT.all = 0x0000;             // Disable all capture interrupts
+    ECap4Regs.ECEINT.bit.CEVT1 = 1;            // Enable event 1 capture interrupt
     ECap4Regs.ECCLR.all = 0xFFFF;              // Clear all CAP interrupt flags
     ECap4Regs.ECCTL1.bit.CAPLDEN = 0;          // Disable CAP1-CAP4 register loads
     ECap4Regs.ECCTL2.bit.TSCTRSTOP = 0;        // Make sure the counter is stopped

@@ -13,6 +13,10 @@ int mb_temp=0;
 int SteerOut=0;  //main output from steering wheel
 int i=0,t=0;
 int count;
+int countLF=0;
+int countRF=0;
+int odometer=0;
+int x=0, y=0, z=0;
 int temp1=0, temp2=0;
 int send_motors_min_1=0;
 float phase_n=PHASE;
@@ -22,12 +26,13 @@ float current_left_motor=0.0, current_right_motor=0.0;
 float voltage_bms=0.0;
 float current_bms=0.0;
 float current_acc_cont=0.0;
+int temp_left_motor=0, temp_right_motor=0;
 extern float speed, speedr, speedf, speedLF, speedRF, speedLR, speedRR;
 extern int flag;
 extern int minspeedr, minspeedf;
 extern int error_code;
 bool racelogic=false;
-int racelogic_count=0;
+int racelogic_time=0;
 extern int mode;
 
 
@@ -42,17 +47,33 @@ interrupt void cpu_timer0_isr(void)
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP1;
 }
 */
+interrupt void ecap3_int_isr(void) {
+    countRF++;
+    ECap3Regs.ECCLR.bit.INT = 1;
+    ECap3Regs.ECCLR.bit.CEVT1 = 1;
+    PieCtrlRegs.PIEACK.all = PIEACK_GROUP4;
+}
+
+interrupt void ecap4_int_isr(void) {
+    countLF++;
+    ECap4Regs.ECCLR.bit.INT = 1;
+    ECap4Regs.ECCLR.bit.CEVT1 = 1;
+    PieCtrlRegs.PIEACK.all = PIEACK_GROUP4;
+}
 
 interrupt void main_timer_isr(void) {
-	calc_speed();
+    send_CAN_sync_message();
 
+    calc_speed();
+    odometer=(countLF+countRF)*0.069375/4;
 
     if (speedf<0.1) {
         racelogic=true;
-        racelogic_count=0;
+        racelogic_time=0;
+        countLF=countRF=0;
     } else {
-        if (racelogic and speedf<50)
-            racelogic_count+=5;
+        if (racelogic and odometer<75)
+            racelogic_time+=5;
         else {
             racelogic=false;
         }
@@ -60,7 +81,6 @@ interrupt void main_timer_isr(void) {
 
 	calc_PedalOut();
 
-	send_CAN_sync_message();
 	//if (PedalOut>1200) PedalOut=1200;
 	bspd();
 	//tang=tan(SteerOut*3.1415/180);
@@ -69,14 +89,18 @@ interrupt void main_timer_isr(void) {
 	if (GpioDataRegs.GPADAT.bit.GPIO9==1) GpioDataRegs.GPASET.bit.GPIO5=1; else GpioDataRegs.GPACLEAR.bit.GPIO5=1;
 
 
-
     voltage_bms = (ECanbMboxes.MBOX28.MDL.all)*0.0015;
     current_bms = ECanbMboxes.MBOX29.MDL.word.LOW_WORD;
     voltage_left_motor = ECanbMboxes.MBOX15.MDL.word.LOW_WORD/10;
     voltage_right_motor = ECanbMboxes.MBOX16.MDL.word.LOW_WORD/10;
     current_left_motor = ECanbMboxes.MBOX15.MDL.word.HI_WORD/10;
     current_right_motor = ECanbMboxes.MBOX16.MDL.word.HI_WORD/10;
-    current_acc_cont = 0.78125*ECanbMboxes.MBOX20.MDL.word.LOW_WORD-400;
+    current_acc_cont = 1.5625*ECanbMboxes.MBOX20.MDL.word.LOW_WORD-800;
+    temp_left_motor = 150.6*ECanbMboxes.MBOX13.MDL.word.HI_WORD*5/1024-146.1;
+    temp_right_motor = 150.6*ECanbMboxes.MBOX13.MDL.word.LOW_WORD*5/1024-146.1;
+    x=ECanbMboxes.MBOX20.MDL.word.HI_WORD;
+    y=ECanbMboxes.MBOX20.MDH.word.LOW_WORD;
+    z=ECanbMboxes.MBOX20.MDH.word.HI_WORD;
     if (current_acc_cont<0) current_acc_cont=0;
 
     steering_buttons();
@@ -91,6 +115,8 @@ interrupt void main_timer_isr(void) {
     if (slip<slip_n*phase_n && slip>0) alfa=alfa_n*cos(slip*1.5708/slip_n);
     if (slip>=slip_n*phase_n) alfa=alfa_n*cos(1.5708*phase_n);
     if (slip<=0 or slip_n<=0.03)    alfa=alfa_n;
+
+    if (current_acc_cont>400) alfa=0;
 
 
     if (send_motors>=send_motors_min_1+alfa) {
@@ -110,12 +136,12 @@ interrupt void main_timer_isr(void) {
     else
         send_CAN_motors(send_motors*flag, send_motors*flag);
 
-    if (mode==0)    send_CAN_priborka(alfa,racelogic_count);
-    if (mode==1)    send_CAN_priborka(slip_n*100,racelogic_count);
-    if (mode==2)    send_CAN_priborka(phase_n*100,racelogic_count);
+    if (mode==0)    send_CAN_priborka(alfa,racelogic_time);
+    if (mode==1)    send_CAN_priborka(slip_n*100,racelogic_time);
+    if (mode==2)    send_CAN_priborka(phase_n*100,racelogic_time);
     //send_CAN_priborka(voltage_bms,speedf);
     send_CAN_steer(SteerOut);
-    send_CAN_datalogger(slip*100,send_motors,speedf,speedr,0,voltage_bms,current_bms,current_acc_cont,0,0,voltage_left_motor,current_left_motor,0,0,voltage_right_motor,current_right_motor);
+    send_CAN_datalogger(slip*100,send_motors,speedf,speedr,voltage_bms,current_bms,current_acc_cont,voltage_left_motor,current_left_motor,voltage_right_motor,current_right_motor,x,y,z,temp_left_motor,temp_right_motor);
 
 #ifdef FLASH
 	shutdown_detect();
@@ -150,8 +176,12 @@ void main(void){
 
 	// Enable Xint3 in the PIE: Group 12 interrupt 1
     PieCtrlRegs.PIECTRL.bit.ENPIE = 1;   // Enable the PIE block
+    PieCtrlRegs.PIEIER4.bit.INTx3 = 1;  // Enable PIE Group 4 INTx3
+    PieCtrlRegs.PIEIER4.bit.INTx4 = 1;  // Enable PIE Group 4 INTx4
     PieCtrlRegs.PIEIER9.bit.INTx7 = 1;  // Enable PIE Group 9 INTx7
 
+    IER |= M_INT4;
+    //IER |= M_INT9;
     IER |= M_INT12; // Enable CPU int12
     IER |= M_INT13;
 // Interrupts that are used in this example are re-mapped to ISR functions found within this file.
@@ -159,6 +189,8 @@ void main(void){
 	//PieVectTable.TINT0 = &cpu_timer0_isr;
 	PieVectTable.XINT13 = &main_timer_isr;
 	PieVectTable.ECAN0INTB = &can_int_isr;
+	PieVectTable.ECAP3_INT = &ecap3_int_isr;
+	PieVectTable.ECAP4_INT = &ecap4_int_isr;
 	EDIS;
 
 	InitGpio();
@@ -193,6 +225,7 @@ void main(void){
 	while(1)
 	{
 	    stop_light();
+	    ECap4Regs.ECCLR.bit.INT = 1;
 	}
 }
 //========================================================================

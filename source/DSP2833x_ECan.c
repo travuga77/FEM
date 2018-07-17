@@ -295,6 +295,7 @@ void InitECanb(void)		// Initialize eCAN-B module
     ECanbMboxes.MBOX10.MSGID.all = 0; // Standart Identifier
     ECanbMboxes.MBOX11.MSGID.all = 0; // Standart Identifier
     ECanbMboxes.MBOX12.MSGID.all = 0;
+    ECanbMboxes.MBOX13.MSGID.all = 0;
     ECanbMboxes.MBOX15.MSGID.all = 0; // Standart Identifier
     ECanbMboxes.MBOX16.MSGID.all = 0; // Standart Identifier
     ECanbMboxes.MBOX20.MSGID.all = 0; // Standart Identifier
@@ -320,6 +321,7 @@ void InitECanb(void)		// Initialize eCAN-B module
 
     ECanbMboxes.MBOX28.MSGID.bit.AME=1;
     ECanbLAMRegs.LAM12.all=0x80000000;
+    ECanbLAMRegs.LAM13.all=0x80000000;
     ECanbLAMRegs.LAM15.all=0x80000000;
     ECanbLAMRegs.LAM16.all=0x80000000;
     ECanbLAMRegs.LAM20.all=0x80000000;
@@ -329,6 +331,7 @@ void InitECanb(void)		// Initialize eCAN-B module
     ECanbLAMRegs.LAM31.all=0x80000000;
 
     ECanbMboxes.MBOX12.MSGID.bit.STDMSGID = 0x330; //from priborka
+    ECanbMboxes.MBOX13.MSGID.bit.STDMSGID = 0x240; //motor temperatures
     ECanbMboxes.MBOX15.MSGID.bit.STDMSGID = 0x1A2; // left motor info
     ECanbMboxes.MBOX16.MSGID.bit.STDMSGID = 0x1A1; // right motor info
     ECanbMboxes.MBOX20.MSGID.bit.STDMSGID = 0x230; // acc container current
@@ -350,6 +353,7 @@ void InitECanb(void)		// Initialize eCAN-B module
     ECanbShadow.CANMD.bit.MD26 = 0;
     ECanbShadow.CANMD.bit.MD27 = 0;
     ECanbShadow.CANMD.bit.MD12 = 1;
+    ECanbShadow.CANMD.bit.MD13 = 1;
     ECanbShadow.CANMD.bit.MD15 = 1;
     ECanbShadow.CANMD.bit.MD16 = 1;
     ECanbShadow.CANMD.bit.MD20 = 1;
@@ -372,6 +376,7 @@ void InitECanb(void)		// Initialize eCAN-B module
     ECanbShadow.CANME.bit.ME26 = 1;
     ECanbShadow.CANME.bit.ME27 = 1;
     ECanbShadow.CANME.bit.ME12 = 1;
+    ECanbShadow.CANME.bit.ME13 = 1;
     ECanbShadow.CANME.bit.ME15 = 1;
     ECanbShadow.CANME.bit.ME16 = 1;
     ECanbShadow.CANME.bit.ME20 = 1;

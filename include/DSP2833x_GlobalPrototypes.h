@@ -24,7 +24,7 @@ extern "C" {
 //##################################################################
 //                  Global Defines of FEM project
 //##################################################################
-extern interrupt void cpu_timer0_isr(void);
+extern interrupt void ecap4_int_isr(void);
 extern interrupt void main_timer_isr(void);
 extern interrupt void can_int_isr(void);
 extern int differential_r (int K, int sigma);
