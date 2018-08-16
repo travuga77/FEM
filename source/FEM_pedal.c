@@ -15,23 +15,6 @@ extern int PedalOut;
 extern float speedf, speedr;
 extern int alfa;
 
-
-int pol=0;
-
-void correct_alfa(void) {
-    if (speedr<minspeedr) minspeedr=speedr;
-    if (speedf<minspeedf) minspeedf=speedf;
-    if (n>=3) {
-        if (minspeedr-minspeedf>2)
-            alfa=-ALFA;
-        else
-            alfa=ALFA;
-        n=0;
-        minspeedr=minspeedf=32000;
-    }
-    else n++;
-}
-
 interrupt void can_int_isr(void)
 {
     can_pedal_rx_flag=1;
@@ -55,8 +38,5 @@ void calc_PedalOut (void){
 
 
     //correct_alfa();
-    /*pol=4095*1.3*speedf/98+300;
-    if (pol>4095) pol=4095;
 
-    if (send_motors_min_1<pol) send_motors_min_1=pol;*/
 }

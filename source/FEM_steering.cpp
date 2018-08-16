@@ -9,8 +9,8 @@
 int sw_buttons=0;
 bool button_pressed_once=true;
 int mode=0;
-extern int alfa_n;
-extern float phase_n, slip_n;
+extern int max_alfa;
+extern float phase, max_slip, curr_phase, curr_perc, perc_per_g;
 
 void spi_xmit(Uint16 a)
 {
@@ -29,22 +29,28 @@ int calc_steer_wheel_spi(void) {
 void steering_buttons(void) {
     sw_buttons =  ECanbMboxes.MBOX12.MDL.byte.BYTE3;
     if (sw_buttons*button_pressed_once==1) {
-        if (mode==0)    alfa_n+=5;
-        if (mode==1)    slip_n+=0.01;
-        if (mode==2)    phase_n+=0.01;
+        if (mode==0)    max_alfa+=5;
+        if (mode==1)    max_slip+=0.01;
+        if (mode==2)    phase+=0.01;
+        if (mode==3)    curr_phase+=0.02;
+        if (mode==4)    curr_perc+=0.05;
+        if (mode==5)    perc_per_g+=0.01;
         button_pressed_once=false;
     }
 
     if (sw_buttons*button_pressed_once==8) {
         mode+=1;
-        if (mode>2) mode=0;
+        if (mode>5) mode=0;
         button_pressed_once=false;
     }
 
     if (sw_buttons*button_pressed_once==4) {
-        if (mode==0)    alfa_n-=5;
-        if (mode==1)    slip_n-=0.01;
-        if (mode==2)    phase_n-=0.01;
+        if (mode==0)    max_alfa-=5;
+        if (mode==1)    max_slip-=0.01;
+        if (mode==2)    phase-=0.01;
+        if (mode==3)    curr_phase-=0.02;
+        if (mode==4)    curr_perc-=0.05;
+        if (mode==5)    perc_per_g-=0.01;
         button_pressed_once=false;
     }
 

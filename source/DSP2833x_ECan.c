@@ -335,7 +335,7 @@ void InitECanb(void)		// Initialize eCAN-B module
     ECanbMboxes.MBOX15.MSGID.bit.STDMSGID = 0x1A2; // left motor info
     ECanbMboxes.MBOX16.MSGID.bit.STDMSGID = 0x1A1; // right motor info
     ECanbMboxes.MBOX20.MSGID.bit.STDMSGID = 0x230; // acc container current
-    ECanbMboxes.MBOX28.MSGID.bit.STDMSGID = 0x3A0; // bms voltage and temp
+    ECanbMboxes.MBOX28.MSGID.bit.STDMSGID = 0x1A0; // bms voltage and temp
     ECanbMboxes.MBOX29.MSGID.bit.STDMSGID = 0x4A0; // Standart Identifier
     ECanbMboxes.MBOX30.MSGID.bit.STDMSGID = 0x150; // Standart Identifier
     ECanbMboxes.MBOX31.MSGID.bit.STDMSGID = 0x151; // Standart Identifier

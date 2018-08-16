@@ -18,20 +18,23 @@
 // MAIN FEM PROJECT SETTINGS
 //###########################################################################
 
-#define no_diff 1
+//#define no_diff 1
 //#define grach_diff_rules 1
 //#define grach_diff 1
-//#define phillips_diff 1
+#define phillips_diff 1
 
+#define PERC_PER_G 0
 #define MAX_VOLTAGE 98
 #define MIN_VOLTAGE 67
-
+#define MAX_CURR 300
+#define CURR_PHASE 0.0
+#define CURR_PERC 0.5
 #define PHASE 1.0
-#define SLIP 0.15
-#define ALFA 80
+#define MAX_SLIP 0.02
+#define MAX_ALFA 50
 #define DELAY_MS(X) (DELAY_US (X*1000))
-#define Lk 160
-#define dk 114
+#define W_BASE 160
+#define R_TRACK 114
 #define BRAKE_PEDAL_PIN         GPIO50
 #define BRAKE_LIGHT_PIN         GPIO47
 #define RTDS_PIN                GPIO40

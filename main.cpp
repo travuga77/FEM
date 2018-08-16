@@ -8,7 +8,7 @@
 
 int PedalOut=0;  //main output from pedal
 int send_motors=0;
-int alfa, alfa_n=ALFA; //
+int alfa, max_alfa=MAX_ALFA; //
 int mb_temp=0;
 int SteerOut=0;  //main output from steering wheel
 int i=0,t=0;
@@ -19,13 +19,17 @@ int odometer=0;
 int x=0, y=0, z=0;
 int temp1=0, temp2=0;
 int send_motors_min_1=0;
-float phase_n=PHASE;
-float slip=0.0, slip_n=SLIP;
+int pol;
+float phase=PHASE;
+float slip=0.0, max_slip=MAX_SLIP;
+float curr_phase=CURR_PHASE;
+float curr_perc=CURR_PERC;
 float voltage_left_motor=0.0, voltage_right_motor=0.0;
 float current_left_motor=0.0, current_right_motor=0.0;
 float voltage_bms=0.0;
 float current_bms=0.0;
 float current_acc_cont=0.0;
+float perc_per_g=PERC_PER_G;
 int temp_left_motor=0, temp_right_motor=0;
 extern float speed, speedr, speedf, speedLF, speedRF, speedLR, speedRR;
 extern int flag;
@@ -73,7 +77,7 @@ interrupt void main_timer_isr(void) {
         countLF=countRF=0;
     } else {
         if (racelogic and odometer<75)
-            racelogic_time+=5;
+            racelogic_time+=1;
         else {
             racelogic=false;
         }
@@ -88,9 +92,8 @@ interrupt void main_timer_isr(void) {
 
 	if (GpioDataRegs.GPADAT.bit.GPIO9==1) GpioDataRegs.GPASET.bit.GPIO5=1; else GpioDataRegs.GPACLEAR.bit.GPIO5=1;
 
-
-    voltage_bms = (ECanbMboxes.MBOX28.MDL.all)*0.0015;
-    current_bms = ECanbMboxes.MBOX29.MDL.word.LOW_WORD;
+    voltage_bms = ECanbMboxes.MBOX28.MDH.word.HI_WORD/10;
+    current_bms = (ECanbMboxes.MBOX28.MDL.byte.BYTE1*256+ECanbMboxes.MBOX28.MDL.byte.BYTE2)/10;
     voltage_left_motor = ECanbMboxes.MBOX15.MDL.word.LOW_WORD/10;
     voltage_right_motor = ECanbMboxes.MBOX16.MDL.word.LOW_WORD/10;
     current_left_motor = ECanbMboxes.MBOX15.MDL.word.HI_WORD/10;
@@ -111,13 +114,19 @@ interrupt void main_timer_isr(void) {
     send_motors=PedalOut;
     //send_motors*=(100-PIDOutputGet(&mainPID))/100;
 
-    //if (slip>SLIP) alfa=0; else alfa=alfa_n;
-    if (slip<slip_n*phase_n && slip>0) alfa=alfa_n*cos(slip*1.5708/slip_n);
-    if (slip>=slip_n*phase_n) alfa=alfa_n*cos(1.5708*phase_n);
-    if (slip<=0 or slip_n<=0.03)    alfa=alfa_n;
+    //if (slip>SLIP) alfa=0; else alfa=max_alfa;
 
-    if (current_acc_cont>400) alfa=0;
+    if (slip<max_slip*phase && slip>0) alfa=max_alfa*cos(slip*1.5708/max_slip);
+    if (slip>=max_slip*phase) alfa=max_alfa*cos(1.5708*phase);
+    if (slip<=0 or max_slip<=0.03) alfa=max_alfa;
 
+    if (current_acc_cont<MAX_CURR*(1+(1-curr_perc)*curr_phase) && current_acc_cont>curr_perc*MAX_CURR) alfa*=cos(1.5708*(current_acc_cont-curr_perc*MAX_CURR)/((1-curr_perc)*MAX_CURR));
+    if (current_acc_cont>=MAX_CURR*(1+(1-curr_perc)*curr_phase)) alfa*=cos(1.5708*(1+(1-curr_perc)*curr_phase));
+
+    pol=4095*1.2*speedf/98+300;
+    if (pol>4095) pol=4095;
+
+    if (send_motors_min_1<pol) send_motors_min_1=pol;
 
     if (send_motors>=send_motors_min_1+alfa) {
         send_motors=send_motors_min_1+alfa;
@@ -126,7 +135,6 @@ interrupt void main_timer_isr(void) {
 
     //(98-67)=31 - 100%
     //(voltage_bms-67) - %
-
 
     if (send_motors<0) send_motors=0;
     if (send_motors>4095) send_motors=4095;
@@ -137,8 +145,11 @@ interrupt void main_timer_isr(void) {
         send_CAN_motors(send_motors*flag, send_motors*flag);
 
     if (mode==0)    send_CAN_priborka(alfa,racelogic_time);
-    if (mode==1)    send_CAN_priborka(slip_n*100,racelogic_time);
-    if (mode==2)    send_CAN_priborka(phase_n*100,racelogic_time);
+    if (mode==1)    send_CAN_priborka(max_slip*100,send_motors);
+    if (mode==2)    send_CAN_priborka(phase*100,racelogic_time);
+    if (mode==3)    send_CAN_priborka(curr_phase*100,current_acc_cont);
+    if (mode==4)    send_CAN_priborka(curr_perc*100,current_acc_cont);
+    if (mode==5)    send_CAN_priborka(fabs(perc_per_g)*100,fabs(x));
     //send_CAN_priborka(voltage_bms,speedf);
     send_CAN_steer(SteerOut);
     send_CAN_datalogger(slip*100,send_motors,speedf,speedr,voltage_bms,current_bms,current_acc_cont,voltage_left_motor,current_left_motor,voltage_right_motor,current_right_motor,x,y,z,temp_left_motor,temp_right_motor);
@@ -150,7 +161,7 @@ interrupt void main_timer_isr(void) {
 
 void main(void){
 // Initialize System Control: PLL, WatchDog, enable Peripheral Clocks
-    InitSysCtrl();
+      InitSysCtrl();
 
 	// Copy time critical code and Flash setup code to RAM.
     // The  RamfuncsLoadStart, RamfuncsLoadEnd, and RamfuncsRunStart
@@ -211,7 +222,7 @@ void main(void){
 	InitXIntrupt();
 
 	//ConfigCpuTimer(&CpuTimer0, 100, 500);
-    ConfigCpuTimer(&CpuTimer1, 100, 50000);
+    ConfigCpuTimer(&CpuTimer1, 100, 10000);
     //CpuTimer0Regs.TCR.all = 0x4000; // Use write-only instruction to set TSS bit = 0
     CpuTimer1Regs.TCR.all = 0x4000; // Use write-only instruction to set TSS bit = 0
 
