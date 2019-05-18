@@ -23,18 +23,32 @@
 //#define grach_diff 1
 #define phillips_diff 1
 
-#define PERC_PER_G 0
-#define MAX_VOLTAGE 98
-#define MIN_VOLTAGE 67
-#define MAX_CURR 300
+//#define PID_ROUTINE
+#define ALFA_ROUTINE
+
+#ifdef PID_ROUTINE
+#define PID_RISE 4
+#define PID_FALL 100
+#endif
+
+#ifdef ALFA_ROUTINE
+#define MAX_ALFA 100
 #define CURR_PHASE 0.0
 #define CURR_PERC 0.5
+#define PERC_PER_G 0
 #define PHASE 1.0
+#endif
+
+#define MAX_CURR 100
 #define MAX_SLIP 0.02
-#define MAX_ALFA 50
-#define DELAY_MS(X) (DELAY_US (X*1000))
+
+#define RACELOGIC_SPEED 30
+#define MAX_VOLTAGE 98
+#define MIN_VOLTAGE 67
+
 #define W_BASE 160
 #define R_TRACK 114
+#define DELAY_MS(X) (DELAY_US (X*1000))
 #define BRAKE_PEDAL_PIN         GPIO50
 #define BRAKE_LIGHT_PIN         GPIO47
 #define RTDS_PIN                GPIO40

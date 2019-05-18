@@ -52,7 +52,7 @@ void rtd (void)
         if (GpioDataRegs.GPBDAT.bit.START_BUTTON_PIN*!GpioDataRegs.GPBDAT.bit.BRAKE_PEDAL_PIN*GpioDataRegs.GPCDAT.bit.SHUTDOWN_CIRCUIT_PIN==1)
     #endif
     #ifdef RAM
-        if (GpioDataRegs.GPBDAT.bit.START_BUTTON_PIN*!GpioDataRegs.GPBDAT.bit.BRAKE_PEDAL_PIN==1)
+        if (GpioDataRegs.GPBDAT.bit.START_BUTTON_PIN)
     #endif
         {
             r++;

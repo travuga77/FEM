@@ -6,7 +6,7 @@
  */
 
 #include "DSP28x_Project.h"
-int sw_buttons=0;
+
 bool button_pressed_once=true;
 int mode=0;
 extern int max_alfa;
@@ -27,7 +27,7 @@ int calc_steer_wheel_spi(void) {
 }
 
 void steering_buttons(void) {
-    sw_buttons =  ECanbMboxes.MBOX12.MDL.byte.BYTE3;
+    int sw_buttons =  ECanbMboxes.MBOX12.MDL.byte.BYTE3;
     if (sw_buttons*button_pressed_once==1) {
         if (mode==0)    max_alfa+=5;
         if (mode==1)    max_slip+=0.01;

@@ -110,7 +110,7 @@ void send_CAN_datalogger (int tr15, int tr14, int tr13, int tr12, int tr11, int 
         ECanbRegs.CANTA.all = ECanbShadow.CANTA.all;
 }
 
-void send_CAN_motors (int a, int b) {
+void send_CAN_motors (int b, int a) {
 
     volatile struct ECAN_REGS ECanbShadow;
 

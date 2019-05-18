@@ -27,7 +27,7 @@ void calc_PedalOut (void){
     volatile struct ECAN_REGS ECanbShadow;
 
     can_pedal_rx_flag=ECanbRegs.CANRMP.bit.RMP30;
-    PedalOut=ECanbMboxes.MBOX30.MDL.word.LOW_WORD*can_pedal_rx_flag+300;
+    PedalOut=ECanbMboxes.MBOX30.MDL.word.LOW_WORD;//*can_pedal_rx_flag;
     ECanbShadow.CANRMP.all = ECanbRegs.CANRMP.all;
     ECanbShadow.CANRMP.bit.RMP30=1;
     ECanbRegs.CANRMP.all = ECanbShadow.CANRMP.all;
