@@ -12,7 +12,7 @@ int n=0;
 int minspeedr=32000.0, minspeedf=32000.0;
 int can_pedal_rx_flag=0;
 extern int PedalOut;
-extern float speedf, speedr;
+extern double speedf, speedr;
 extern int alfa;
 
 interrupt void can_int_isr(void)

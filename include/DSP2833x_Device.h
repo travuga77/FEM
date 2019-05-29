@@ -18,6 +18,7 @@
 // MAIN FEM PROJECT SETTINGS
 //###########################################################################
 
+#define PERIOD 10
 //#define no_diff 1
 //#define grach_diff_rules 1
 //#define grach_diff 1
@@ -33,13 +34,13 @@
 
 #ifdef ALFA_ROUTINE
 #define MAX_ALFA 100
+#define PHASE 1.0
 #define CURR_PHASE 0.0
 #define CURR_PERC 0.5
 #define PERC_PER_G 0
-#define PHASE 1.0
 #endif
 
-#define MAX_CURR 100
+#define MAX_CURR 220
 #define MAX_SLIP 0.02
 
 #define RACELOGIC_SPEED 30

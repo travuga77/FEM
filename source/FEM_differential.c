@@ -9,7 +9,7 @@
 #include <math.h>
 
 extern int x;
-extern float perc_per_g;
+extern double perc_per_g;
 
 #ifdef no_diff
 int differential_r(int K, int sigma)
@@ -66,7 +66,7 @@ int differential_l(int K, int sigma)
 #ifdef phillips_diff
 int differential_r(int K, int sigma)
 {
-    int Kr; float x_a, Ka;
+    int Kr; double x_a, Ka;
     Ka=perc_per_g*fabs(x)/1000;
     if (sigma>3)
     {
@@ -88,7 +88,7 @@ int differential_r(int K, int sigma)
 
 int differential_l(int K, int sigma)
 {
-    int Kl; float x_a, Ka;
+    int Kl; double x_a, Ka;
     Ka=perc_per_g*fabs(x)/1000;
     if (sigma>3)
     {

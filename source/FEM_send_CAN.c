@@ -7,6 +7,8 @@
 
 #include "DSP28x_Project.h"
 
+
+
 void send_CAN_steer (int c) {
 
     volatile struct ECAN_REGS ECanbShadow;
@@ -27,21 +29,21 @@ void send_CAN_steer (int c) {
 
 void send_CAN_priborka (int left, int right) {
 
-    volatile struct ECAN_REGS ECanbShadow;
+        volatile struct ECAN_REGS ECanbShadow;
 
-    ECanbMboxes.MBOX27.MDL.word.LOW_WORD=right;   //TEST AREA
-    ECanbMboxes.MBOX27.MDL.word.HI_WORD=left;   //TEST AREA
+        ECanbMboxes.MBOX27.MDL.word.LOW_WORD=right;   //TEST AREA
+        ECanbMboxes.MBOX27.MDL.word.HI_WORD=left;   //TEST AREA
 
-    ECanbShadow.CANTRS.all = 0;
-        ECanbShadow.CANTRS.bit.TRS27 = 1;
-        ECanbRegs.CANTRS.all = ECanbShadow.CANTRS.all;
-    do
-    {
-        ECanbShadow.CANTA.all = ECanbRegs.CANTA.all;
-    } while (ECanbShadow.CANTA.bit.TA27 == 0);              // Wait for TA27 bit to be set...
-    ECanbShadow.CANTA.all = 0;
-        ECanbShadow.CANTA.bit.TA27 = 1;                     // Clear TA27
-        ECanbRegs.CANTA.all = ECanbShadow.CANTA.all;
+        ECanbShadow.CANTRS.all = 0;
+            ECanbShadow.CANTRS.bit.TRS27 = 1;
+            ECanbRegs.CANTRS.all = ECanbShadow.CANTRS.all;
+        do
+        {
+            ECanbShadow.CANTA.all = ECanbRegs.CANTA.all;
+        } while (ECanbShadow.CANTA.bit.TA27 == 0);              // Wait for TA27 bit to be set...
+        ECanbShadow.CANTA.all = 0;
+            ECanbShadow.CANTA.bit.TA27 = 1;                     // Clear TA27
+            ECanbRegs.CANTA.all = ECanbShadow.CANTA.all;
 }
 
 void send_CAN_datalogger (int tr15, int tr14, int tr13, int tr12, int tr11, int tr10, int tr9, int tr8, int tr7, int tr6, int tr5, int tr4, int tr3, int tr2, int tr1, int tr0) {

@@ -9,7 +9,7 @@
 int PedalOut=0;  //main output from pedal
 int send_motors=0, send_left_motor=0, send_right_motor=0;
 int send_motors_max=4095;
-
+int count_pri=0;
 int mb_temp=0;
 int SteerOut=0;  //main output from steering wheel
 int i=0,t=0;
@@ -22,17 +22,17 @@ int x=0, y=0, z=0;
 int temp1=0, temp2=0;
 int pol;
 int SoC;
-float C1, C2, x_curr;
-
-float Ul, el;
-float voltage_left_motor=0.0, voltage_right_motor=0.0;
-float current_left_motor=0.0, current_right_motor=0.0;
-float voltage_bms=0.0;
-float current_bms=0.0;
-float current_acc_cont=0.0;
-float current_left_motor_calc;
+double C1, C2, x_curr;
+double max_alfa_mod=0.0;
+double Ul, el;
+double voltage_left_motor=0.0, voltage_right_motor=0.0;
+double current_left_motor=0.0, current_right_motor=0.0;
+double voltage_bms=0.0;
+double current_bms=0.0;
+double current_acc_cont=0.0;
+double current_left_motor_calc;
 int temp_left_motor=0, temp_right_motor=0;
-extern float speed, speedr, speedf, speedLF, speedRF, speedLR, speedRR;
+extern double speed, speedr, speedf, speedLF, speedRF, speedLR, speedRR;
 extern double omegaLR, omegaRR;
 extern int flag;
 extern int minspeedr, minspeedf;
@@ -43,16 +43,17 @@ int racelogic_time=0;
 extern int mode;
 
 #ifdef ALFA_ROUTINE
-int alfa, max_alfa=MAX_ALFA; //
+int alfa, max_alfa=MAX_ALFA;
 int send_motors_min_1=0;
-float phase=PHASE;
-float slip=0.0, max_slip=MAX_SLIP;
-float curr_phase=CURR_PHASE;
-float curr_perc=CURR_PERC;
-float perc_per_g=PERC_PER_G;
+double phase=PHASE;
+double max_curr=MAX_CURR;
+double slip=0.0, max_slip=MAX_SLIP;
+double curr_phase=CURR_PHASE;
+double curr_perc=CURR_PERC;
+double perc_per_g=PERC_PER_G;
 #endif
 #ifdef PID_ROUTINE
-float curr_pid_coff=0.0;
+double curr_pid_coff=0.0;
 PIDControl mainPID;
 #endif
 /*
@@ -91,7 +92,7 @@ interrupt void main_timer_isr(void) {
     } else {
         //if (racelogic and odometer<75)
         if (racelogic and speedf<RACELOGIC_SPEED)
-            racelogic_time+=2;
+            racelogic_time+=PERIOD/10;
         else {
             racelogic=false;
         }
@@ -125,7 +126,8 @@ interrupt void main_timer_isr(void) {
 
     steering_buttons();
 
-    slip = (speedr-speedf)/(speedf+0.01);
+    slip = (speedr-speedf)/(speedf+0.001);
+    if (slip>10) slip=10;
 
 #ifdef PID_ROUTINE
     // PID ALGORITHM  // PID ALGORITHM  // PID ALGORITHM  // PID ALGORITHM  // PID ALGORITHM  // PID ALGORITHM  // PID ALGORITHM  // PID ALGORITHM  // PID ALGORITHM
@@ -159,17 +161,19 @@ interrupt void main_timer_isr(void) {
     //send_motors_max=MAX_CURR*0.98*4095/(current_left_motor+current_right_motor+0.1);
     //if (send_motors>send_motors_max) send_motors=send_motors_max;
 
-    if (slip<max_slip*phase && slip>0) alfa=max_alfa*cos(slip*1.5708/max_slip);
-    if (slip>=max_slip*phase) alfa=max_alfa*cos(1.5708*phase);
-    if (slip<=0 or max_slip<=0.03) alfa=max_alfa;
+    max_alfa_mod=max_alfa*PERIOD/20;
+    if (slip<max_slip*phase && slip>0) alfa=max_alfa_mod*cos(slip*1.5708/max_slip);
+    if (slip>=max_slip*phase) alfa=max_alfa_mod*cos(1.5708*phase);
+    if (slip<=0 or max_slip<=0.03) alfa=max_alfa_mod;
 
 
-    float C1 = MAX_CURR*(1-curr_perc);
-    float C2 = MAX_CURR*(1+curr_perc);
-    float x_curr = 3.1415*(current_bms - C1)/(C2-C1);
-    if (current_bms<=C1) alfa*=1;
-    if (current_bms>C1 && current_bms<C2) alfa*=cos(x_curr);
-    if (current_bms>=C2) alfa*=-1;
+    double C1 = max_curr*(1-curr_perc);
+    double C2 = max_curr*(1+curr_perc);
+    double x_curr = 3.1415*(current_acc_cont - C1)/(C2-C1);
+    if (current_acc_cont<=C1) alfa*=1;
+    if (current_acc_cont>C1 && current_acc_cont<=max_curr) alfa*=cos(x_curr);
+    if (current_acc_cont>max_curr && current_acc_cont<C2) alfa*=2*cos(x_curr);
+    if (current_acc_cont>=C2) alfa*=-2;
 
     //pol=4095*1.2*speedf/98+300;
     //if (pol>4095) pol=4095;
@@ -181,37 +185,36 @@ interrupt void main_timer_isr(void) {
     }
     send_motors_min_1=send_motors;
 
-
-
     // ALFA ALGORITHM  // ALFA ALGORITHM  // ALFA ALGORITHM  // ALFA ALGORITHM  // ALFA ALGORITHM  // ALFA ALGORITHM
 #endif
-
-
 
     if (send_motors<0) send_motors=0;
     if (send_motors>4095) send_motors=4095;
 
-    send_left_motor=differential_l(send_motors,SteerOut)*flag;
+    send_left_motor =differential_l(send_motors,SteerOut)*flag;
     send_right_motor=differential_r(send_motors,SteerOut)*flag;
-
+/*
     Ul=(send_left_motor*voltage_left_motor/4095);
     el=0.025*omegaLR*60*4.1;
     current_left_motor_calc=(Ul-el)*1000/16.95/0.75;
-
+*/
     if (fabs(SteerOut)>5)
         send_CAN_motors(send_left_motor,send_right_motor);
     else
         send_CAN_motors(send_motors*flag, send_motors*flag);
-
-    if (mode==0)    send_CAN_priborka(max_alfa,speedf);
-    if (mode==1)    send_CAN_priborka(max_slip*100,slip);
-    if (mode==2)    send_CAN_priborka(phase*100,slip);
-    if (mode==3)    send_CAN_priborka(curr_phase*100,SoC);
-    if (mode==4)    send_CAN_priborka(curr_perc*100,current_bms);
-    if (mode==5)    send_CAN_priborka(fabs(perc_per_g)*100,fabs(x));
+    if (count_pri>=100) {
+        if (mode==0)    send_CAN_priborka(max_alfa,speedf);
+        if (mode==1)    send_CAN_priborka(max_slip*100,slip*100);
+        if (mode==2)    send_CAN_priborka(phase*100,PedalOut);
+        if (mode==3)    send_CAN_priborka(curr_phase*100,send_motors);
+        if (mode==4)    send_CAN_priborka(max_curr,current_acc_cont);
+        if (mode==5)    send_CAN_priborka(fabs(perc_per_g)*100,fabs(x));
+        count_pri=0;
+    }
+    else count_pri+=PERIOD;
     //send_CAN_priborka(voltage_bms,speedf);
     send_CAN_steer(SteerOut);
-    send_CAN_datalogger(PedalOut,alfa,send_motors,speedf,speedr,slip*100,voltage_bms,current_bms,send_motors_max,current_left_motor,current_left_motor_calc,x,y,z,temp_left_motor,temp_right_motor);
+    send_CAN_datalogger(SteerOut,PedalOut,alfa,send_motors,speedf,speedr,slip*100,voltage_bms,current_acc_cont,current_left_motor,current_right_motor,x,y,z,temp_left_motor,temp_right_motor);
 
 #ifdef FLASH
 	shutdown_detect();
@@ -281,7 +284,7 @@ void main(void){
 	InitXIntrupt();
 
 	//ConfigCpuTimer(&CpuTimer0, 100, 500);
-    ConfigCpuTimer(&CpuTimer1, 100, 20000);
+    ConfigCpuTimer(&CpuTimer1, 100, PERIOD*1000);
     //CpuTimer0Regs.TCR.all = 0x4000; // Use write-only instruction to set TSS bit = 0
     CpuTimer1Regs.TCR.all = 0x4000; // Use write-only instruction to set TSS bit = 0
 
