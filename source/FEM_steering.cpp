@@ -26,7 +26,7 @@ int calc_steer_wheel_spi(void) {
     return St;
 }
 
-void steering_buttons(void) {
+void get_steering_buttons(void) {
     int sw_buttons =  ECanbMboxes.MBOX12.MDL.byte.BYTE3;
     if (sw_buttons*button_pressed_once==1) {
         if (mode==0)    {max_alfa+=5; if (max_alfa>200) max_alfa=200;}

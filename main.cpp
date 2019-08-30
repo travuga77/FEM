@@ -14,7 +14,6 @@ int mb_temp=0;
 int SteerOut=0;  //main output from steering wheel
 int i=0,t=0;
 int count;
-int count_RL;
 int countLF=0;
 int countRF=0;
 int odometer=0;
@@ -22,6 +21,7 @@ int x=0, y=0, z=0;
 int temp1=0, temp2=0;
 int pol;
 int SoC;
+long benchmark=0, benchmark_start=0;
 double C1, C2, x_curr;
 double max_alfa_mod=0.0;
 double Ul, el;
@@ -32,14 +32,14 @@ double current_bms=0.0;
 double current_acc_cont=0.0;
 double current_left_motor_calc;
 int temp_left_motor=0, temp_right_motor=0;
-extern double speed, speedr, speedf, speedLF, speedRF, speedLR, speedRR;
-extern double omegaLR, omegaRR;
+extern double speed, speedr, speedf, speedRR, speedRL, speedFL, speedFR;
+extern double omegaRL, omegaRR;
 extern int flag;
 extern int minspeedr, minspeedf;
 extern int error_code;
 
 bool racelogic=false;
-int racelogic_time=0;
+long racelogic_time=0;
 extern int mode;
 
 #ifdef ALFA_ROUTINE
@@ -65,8 +65,23 @@ interrupt void cpu_timer0_isr(void)
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP1;
 }
 */
+interrupt void ecap1_int_isr(void) {
+    ECap1Regs.ECCLR.bit.CTROVF=1;
+    ECap1Regs.ECCLR.bit.INT = 1;
+    ECap1Regs.ECCLR.bit.CEVT1 = 1;
+    PieCtrlRegs.PIEACK.all = PIEACK_GROUP4;
+}
+
+interrupt void ecap2_int_isr(void) {
+    ECap2Regs.ECCLR.bit.CTROVF=1;
+    ECap2Regs.ECCLR.bit.INT = 1;
+    ECap2Regs.ECCLR.bit.CEVT1 = 1;
+    PieCtrlRegs.PIEACK.all = PIEACK_GROUP4;
+}
+
 interrupt void ecap3_int_isr(void) {
     countRF++;
+    ECap3Regs.ECCLR.bit.CTROVF=1;
     ECap3Regs.ECCLR.bit.INT = 1;
     ECap3Regs.ECCLR.bit.CEVT1 = 1;
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP4;
@@ -74,35 +89,35 @@ interrupt void ecap3_int_isr(void) {
 
 interrupt void ecap4_int_isr(void) {
     countLF++;
+    ECap4Regs.ECCLR.bit.CTROVF=1;
     ECap4Regs.ECCLR.bit.INT = 1;
     ECap4Regs.ECCLR.bit.CEVT1 = 1;
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP4;
 }
 
 interrupt void main_timer_isr(void) {
+    benchmark_start=CpuTimer1Regs.TIM.all;
+
     send_CAN_sync_message();
 
     calc_speed();
     odometer=(countLF+countRF)*0.069375/4;
 
-    if (speedf<0.1) {
+    if (speedf<0.2) {
         racelogic=true;
         racelogic_time=0;
         countLF=countRF=0;
     } else {
         //if (racelogic and odometer<75)
-        if (racelogic and speedf<RACELOGIC_SPEED)
-            racelogic_time+=PERIOD/10;
+        if (racelogic and speedf<RACELOGIC_SPEED and racelogic_time<30000)
+            racelogic_time+=PERIOD;
         else {
             racelogic=false;
         }
     }
-    count_RL=0;
 	calc_PedalOut();
 
-	//if (PedalOut>1200) PedalOut=1200;
 	bspd();
-	//tang=tan(SteerOut*3.1415/180);
 	SteerOut=calc_steer_wheel_spi();
 
 	if (GpioDataRegs.GPADAT.bit.GPIO9==1) GpioDataRegs.GPASET.bit.GPIO5=1; else GpioDataRegs.GPACLEAR.bit.GPIO5=1;
@@ -122,9 +137,7 @@ interrupt void main_timer_isr(void) {
     z=ECanbMboxes.MBOX20.MDH.word.HI_WORD;
     if (current_acc_cont<0) current_acc_cont=0;
 
-
-
-    steering_buttons();
+    get_steering_buttons();
 
     slip = (speedr-speedf)/(speedf+0.001);
     if (slip>10) slip=10;
@@ -166,7 +179,6 @@ interrupt void main_timer_isr(void) {
     if (slip>=max_slip*phase) alfa=max_alfa_mod*cos(1.5708*phase);
     if (slip<=0 or max_slip<=0.03) alfa=max_alfa_mod;
 
-
     double C1 = max_curr*(1-curr_perc);
     double C2 = max_curr*(1+curr_perc);
     double x_curr = 3.1415*(current_acc_cont - C1)/(C2-C1);
@@ -177,7 +189,6 @@ interrupt void main_timer_isr(void) {
 
     //pol=4095*1.2*speedf/98+300;
     //if (pol>4095) pol=4095;
-
     //if (send_motors_min_1<pol) send_motors_min_1=pol;
 
     if (send_motors>=send_motors_min_1+alfa) {
@@ -191,8 +202,9 @@ interrupt void main_timer_isr(void) {
     if (send_motors<0) send_motors=0;
     if (send_motors>4095) send_motors=4095;
 
-    send_left_motor =differential_l(send_motors,SteerOut)*flag;
-    send_right_motor=differential_r(send_motors,SteerOut)*flag;
+    send_motors*=flag;
+    send_left_motor =differential_l(send_motors,SteerOut);
+    send_right_motor=differential_r(send_motors,SteerOut);
 /*
     Ul=(send_left_motor*voltage_left_motor/4095);
     el=0.025*omegaLR*60*4.1;
@@ -201,23 +213,26 @@ interrupt void main_timer_isr(void) {
     if (fabs(SteerOut)>5)
         send_CAN_motors(send_left_motor,send_right_motor);
     else
-        send_CAN_motors(send_motors*flag, send_motors*flag);
-    if (count_pri>=100) {
+        send_CAN_motors(send_motors, send_motors);
+    send_CAN_datalogger(SteerOut,PedalOut,alfa,send_motors,speed,speedf*100,speedr*100,speedRL,speedRR,slip*100,voltage_bms,current_acc_cont,current_left_motor,current_right_motor,racelogic_time,benchmark);
+    if (count_pri>=90) {
         if (mode==0)    send_CAN_priborka(max_alfa,speedf);
-        if (mode==1)    send_CAN_priborka(max_slip*100,slip*100);
+        if (mode==1)    send_CAN_priborka(max_slip*100,fabs(slip)*100);
         if (mode==2)    send_CAN_priborka(phase*100,PedalOut);
         if (mode==3)    send_CAN_priborka(curr_phase*100,send_motors);
         if (mode==4)    send_CAN_priborka(max_curr,current_acc_cont);
-        if (mode==5)    send_CAN_priborka(fabs(perc_per_g)*100,fabs(x));
+        if (mode==5)    send_CAN_priborka(fabs(perc_per_g)*100,racelogic_time);
         count_pri=0;
     }
     else count_pri+=PERIOD;
-    //send_CAN_priborka(voltage_bms,speedf);
-    send_CAN_steer(SteerOut);
-    send_CAN_datalogger(SteerOut,PedalOut,alfa,send_motors,speedf,speedr,slip*100,voltage_bms,current_acc_cont,current_left_motor,current_right_motor,x,y,z,temp_left_motor,temp_right_motor);
 
 #ifdef FLASH
 	shutdown_detect();
+#endif
+#if (CPU_FRQ_150MHZ)
+	benchmark=(benchmark_start-CpuTimer1Regs.TIM.all)/150;
+#else
+	benchmark=(benchmark_start-CpuTimer1Regs.TIM.all)/100;
 #endif
 }
 
@@ -249,9 +264,11 @@ void main(void){
 
 	// Enable Xint3 in the PIE: Group 12 interrupt 1
     PieCtrlRegs.PIECTRL.bit.ENPIE = 1;   // Enable the PIE block
-    PieCtrlRegs.PIEIER4.bit.INTx3 = 1;  // Enable PIE Group 4 INTx3
-    PieCtrlRegs.PIEIER4.bit.INTx4 = 1;  // Enable PIE Group 4 INTx4
-    PieCtrlRegs.PIEIER9.bit.INTx7 = 1;  // Enable PIE Group 9 INTx7
+    PieCtrlRegs.PIEIER4.bit.INTx1 = 1;  // Enable PIE Group 4 INTx1 ECAP1_INT
+    PieCtrlRegs.PIEIER4.bit.INTx2 = 1;  // Enable PIE Group 4 INTx2 ECAP2_INT
+    PieCtrlRegs.PIEIER4.bit.INTx3 = 1;  // Enable PIE Group 4 INTx3 ECAP3_INT
+    PieCtrlRegs.PIEIER4.bit.INTx4 = 1;  // Enable PIE Group 4 INTx4 ECAP4_INT
+    PieCtrlRegs.PIEIER9.bit.INTx7 = 1;  // Enable PIE Group 9 INTx7 ECAN0INTB
 
     IER |= M_INT4;
     //IER |= M_INT9;
@@ -262,6 +279,8 @@ void main(void){
 	//PieVectTable.TINT0 = &cpu_timer0_isr;
 	PieVectTable.XINT13 = &main_timer_isr;
 	PieVectTable.ECAN0INTB = &can_int_isr;
+	PieVectTable.ECAP1_INT = &ecap1_int_isr;
+	PieVectTable.ECAP2_INT = &ecap2_int_isr;
 	PieVectTable.ECAP3_INT = &ecap3_int_isr;
 	PieVectTable.ECAP4_INT = &ecap4_int_isr;
 	EDIS;

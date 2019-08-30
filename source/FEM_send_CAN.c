@@ -9,6 +9,7 @@
 
 
 
+
 void send_CAN_steer (int c) {
 
     volatile struct ECAN_REGS ECanbShadow;
@@ -140,23 +141,14 @@ void send_CAN_motors (int b, int a) {
 
     ECanbShadow.CANTRS.all = 0;
         ECanbShadow.CANTRS.bit.TRS25 = 1;
-        ECanbRegs.CANTRS.all = ECanbShadow.CANTRS.all;
-    do
-    {
-        ECanbShadow.CANTA.all = ECanbRegs.CANTA.all;
-    } while (ECanbShadow.CANTA.bit.TA25 == 0);              // Wait for TA25 bit to be set...
-    ECanbShadow.CANTA.all = 0;
-        ECanbShadow.CANTA.bit.TA25 = 1;                     // Clear TA25
-        ECanbRegs.CANTA.all = ECanbShadow.CANTA.all;
-
-    ECanbShadow.CANTRS.all = 0;
         ECanbShadow.CANTRS.bit.TRS26 = 1;
         ECanbRegs.CANTRS.all = ECanbShadow.CANTRS.all;
     do
     {
         ECanbShadow.CANTA.all = ECanbRegs.CANTA.all;
-    } while (ECanbShadow.CANTA.bit.TA26 == 0);              // Wait for TA26 bit to be set...
+    } while (ECanbShadow.CANTA.bit.TA25 == 0 || ECanbShadow.CANTA.bit.TA26 == 0);              // Wait for TA25 bit to be set...
     ECanbShadow.CANTA.all = 0;
+        ECanbShadow.CANTA.bit.TA25 = 1;                     // Clear TA25
         ECanbShadow.CANTA.bit.TA26 = 1;                     // Clear TA26
         ECanbRegs.CANTA.all = ECanbShadow.CANTA.all;
 }

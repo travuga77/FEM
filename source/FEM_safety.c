@@ -14,9 +14,9 @@ extern int PedalOut;
 
 void bspd(void)
 {
-    if (PedalOut>500 && !GpioDataRegs.GPBDAT.bit.BRAKE_PEDAL_PIN==1)
+    if (PedalOut>600 && !GpioDataRegs.GPBDAT.bit.BRAKE_PEDAL_PIN==1)
         flag=0;
-    if (PedalOut<500 && !GpioDataRegs.GPBDAT.bit.BRAKE_PEDAL_PIN==0)
+    if (PedalOut<600 && !GpioDataRegs.GPBDAT.bit.BRAKE_PEDAL_PIN==0)
         flag=1;
 }
 

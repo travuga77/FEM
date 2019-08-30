@@ -131,7 +131,7 @@ struct ECAN_REGS ECanaShadow;
 	#if (CPU_FRQ_100MHZ)                       // CPU_FRQ_100MHz is defined in DSP2833x_Examples.h
 	/* The following block is only for 100 MHz SYSCLKOUT (50 MHz CAN clock). Bit rate = 1 Mbps
 	   See Note at End of File */
-	    ECanaShadow.CANBTC.bit.BRPREG = 19;
+	    ECanaShadow.CANBTC.bit.BRPREG = 9;
 		ECanaShadow.CANBTC.bit.TSEG2REG = 1;
 		ECanaShadow.CANBTC.bit.TSEG1REG = 6;
 	#endif
@@ -262,9 +262,9 @@ void InitECanb(void)		// Initialize eCAN-B module
 	#if (CPU_FRQ_100MHZ)                       // CPU_FRQ_100MHz is defined in DSP2833x_Examples.h
 	/* The following block is only for 100 MHz SYSCLKOUT (50 MHz CAN clock). Bit rate = 1 Mbps
 	   See Note at end of file */
-	    ECanbShadow.CANBTC.bit.BRPREG = 19;
-		ECanbShadow.CANBTC.bit.TSEG2REG = 1;
-		ECanbShadow.CANBTC.bit.TSEG1REG = 6;
+        ECanbShadow.CANBTC.bit.BRPREG = 9;
+        ECanbShadow.CANBTC.bit.TSEG2REG = 1;
+        ECanbShadow.CANBTC.bit.TSEG1REG = 6;
 	#endif
 
     ECanbShadow.CANBTC.bit.SAM = 1;

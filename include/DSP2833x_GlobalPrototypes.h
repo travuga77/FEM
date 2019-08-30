@@ -27,6 +27,7 @@ extern "C" {
 extern interrupt void ecap4_int_isr(void);
 extern interrupt void main_timer_isr(void);
 extern interrupt void can_int_isr(void);
+extern int calc_steer_wheel_spi(void);
 extern int differential_r (int K, int sigma);
 extern int differential_l (int K, int sigma);
 extern void bspd(void);
@@ -38,8 +39,7 @@ extern void calc_speed(void);
 extern void calc_PedalOut(void);
 extern void shutdown_detect(void);
 extern void stop_light(void);
-extern int calc_steer_wheel_spi(void);
-extern void steering_buttons(void);
+extern void get_steering_buttons(void);
 extern void correct_alfa(void);
 extern void send_CAN_motors (int a, int b);
 extern void send_CAN_steer (int c);
